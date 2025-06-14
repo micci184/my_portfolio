@@ -28,11 +28,15 @@ export default function HomeSection() {
       "$",
     ];
 
+    const tids: NodeJS.Timeout[] = [];
     lines.forEach((line, index) => {
-      setTimeout(() => {
+      const id = setTimeout(() => {
         setTerminalLines((prev) => [...prev, line]);
       }, index * 700);
+      tids.push(id);
     });
+
+    return () => tids.forEach(clearTimeout);
   }, []);
 
   // セクション変更のためのハンドラ関数

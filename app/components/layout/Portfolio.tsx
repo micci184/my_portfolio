@@ -23,8 +23,9 @@ export default function Portfolio() {
     setIsLoaded(true);
 
     // イベントリスナーを追加して、セクション変更イベントを処理
-    const handleSectionChange = (e: CustomEvent<{ section: SectionId }>) => {
-      setActiveSection(e.detail.section);
+    const handleSectionChange = (e: Event) => {
+      const { section } = (e as CustomEvent<{ section: SectionId }>).detail;
+      setActiveSection(section);
     };
 
     const portfolioElement = document.getElementById("portfolio");

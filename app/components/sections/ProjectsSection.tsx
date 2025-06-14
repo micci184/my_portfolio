@@ -1,5 +1,6 @@
 import { Github, ExternalLink } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
+import Image from "next/image";
 
 interface Project {
   id: number;
@@ -85,10 +86,13 @@ export default function ProjectsSection() {
                 className="glass rounded-2xl overflow-hidden hover:neon-glow transition-all duration-300 group"
               >
                 <div className="relative overflow-hidden">
-                  <img
+                  <Image
                     src={project.image}
                     alt={project.title}
+                    width={600}
+                    height={400}
                     className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                    priority={project.featured}
                   />
                   <div className="absolute inset-0 bg-black/60"></div>
                   <div className="absolute top-4 right-4 flex gap-2">
