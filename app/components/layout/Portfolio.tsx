@@ -21,6 +21,24 @@ export default function Portfolio() {
 
   useEffect(() => {
     setIsLoaded(true);
+
+    // イベントリスナーを追加して、セクション変更イベントを処理
+    const handleSectionChange = (e: CustomEvent<{ section: SectionId }>) => {
+      setActiveSection(e.detail.section);
+    };
+
+    const portfolioElement = document.getElementById("portfolio");
+    portfolioElement?.addEventListener(
+      "changeSection",
+      handleSectionChange as EventListener
+    );
+
+    return () => {
+      portfolioElement?.removeEventListener(
+        "changeSection",
+        handleSectionChange as EventListener
+      );
+    };
   }, []);
 
   const renderContent = () => {
@@ -41,7 +59,10 @@ export default function Portfolio() {
   };
 
   return (
-    <div className="min-h-screen flex bg-background text-foreground overflow-hidden">
+    <div
+      id="portfolio"
+      className="min-h-screen flex bg-background text-foreground overflow-hidden"
+    >
       <Sidebar
         activeSection={activeSection}
         setActiveSection={setActiveSection}
