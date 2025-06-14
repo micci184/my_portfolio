@@ -13,7 +13,7 @@ interface Project {
   featured: boolean;
 }
 
-export default function ProjectsSection() {
+export function ProjectsSection() {
   const projects: Project[] = [
     {
       id: 1,
