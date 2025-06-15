@@ -1,6 +1,6 @@
 export function OctoCatAvatar({ size = 120 }: { size?: number }) {
   const pixelSize = Math.max(4, Math.floor(size / 16));
-  
+
   // 16x16 pixel art pattern for OctoCat
   const pixels = [
     "0000000000000000", // Row 1
@@ -33,17 +33,17 @@ export function OctoCatAvatar({ size = 120 }: { size?: number }) {
   };
 
   return (
-    <div 
+    <div
       className="relative inline-block pixel-art group"
-      style={{ 
-        width: size, 
+      style={{
+        width: size,
         height: size,
-        imageRendering: 'pixelated',
-        imageRendering: '-moz-crisp-edges',
-        imageRendering: '-webkit-crisp-edges'
+        imageRendering: "pixelated",
+        WebkitImageRendering: "pixelated",
+        MozImageRendering: "crisp-edges",
       }}
     >
-      <div 
+      <div
         className="grid relative transition-transform duration-300 group-hover:scale-110"
         style={{
           gridTemplateColumns: `repeat(16, ${pixelSize}px)`,
@@ -53,7 +53,7 @@ export function OctoCatAvatar({ size = 120 }: { size?: number }) {
         }}
       >
         {pixels.map((row, rowIndex) =>
-          row.split('').map((pixel, colIndex) => (
+          row.split("").map((pixel, colIndex) => (
             <div
               key={`${rowIndex}-${colIndex}`}
               style={{
@@ -65,7 +65,7 @@ export function OctoCatAvatar({ size = 120 }: { size?: number }) {
           ))
         )}
       </div>
-      
+
       {/* Floating git commands around the avatar */}
       <div className="absolute -top-3 -right-4 text-green-400 text-xs opacity-70 animate-pulse font-mono">
         git push
@@ -79,7 +79,7 @@ export function OctoCatAvatar({ size = 120 }: { size?: number }) {
       <div className="absolute -top-1 left-1/2 text-orange-400 text-xs opacity-70 animate-pulse delay-700 font-mono">
         docker
       </div>
-      
+
       {/* Hover effect particles */}
       <div className="absolute inset-0 pointer-events-none">
         {[...Array(6)].map((_, i) => (
