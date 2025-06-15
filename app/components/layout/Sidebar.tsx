@@ -13,6 +13,13 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { SectionId } from "./Portfolio";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface NavItem {
   id: SectionId;
@@ -132,6 +139,10 @@ export default function Sidebar({
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
           <span className="text-slate">Available for work</span>
         </div>
+      </div>
+
+      <div className="mt-auto p-4">
+        <ThemeToggle />
       </div>
     </div>
   );
