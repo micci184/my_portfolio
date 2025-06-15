@@ -1,6 +1,6 @@
 export function PixelWizardAvatar({ size = 120 }: { size?: number }) {
   const pixelSize = Math.max(4, Math.floor(size / 16));
-  
+
   // 16x16 pixel art pattern for cute wizard
   const pixels = [
     "0000000000000000", // Row 1
@@ -27,22 +27,20 @@ export function PixelWizardAvatar({ size = 120 }: { size?: number }) {
     "3": "#ef4444", // red mouth
     "6": "#3b82f6", // blue hat
     "9": "#fbbf24", // yellow star
-    "A": "#8b5cf6", // purple robe
-    "E": "#fef3c7", // skin
+    A: "#8b5cf6", // purple robe
+    E: "#fef3c7", // skin
+  };
+
+  // CSSプロパティをオブジェクトとして定義
+  const pixelArtStyle: React.CSSProperties = {
+    width: size,
+    height: size,
+    imageRendering: "pixelated" as any,
   };
 
   return (
-    <div 
-      className="relative inline-block pixel-art"
-      style={{ 
-        width: size, 
-        height: size,
-        imageRendering: 'pixelated',
-        imageRendering: '-moz-crisp-edges',
-        imageRendering: '-webkit-crisp-edges'
-      }}
-    >
-      <div 
+    <div className="relative inline-block pixel-art" style={pixelArtStyle}>
+      <div
         className="grid relative"
         style={{
           gridTemplateColumns: `repeat(16, ${pixelSize}px)`,
@@ -52,7 +50,7 @@ export function PixelWizardAvatar({ size = 120 }: { size?: number }) {
         }}
       >
         {pixels.map((row, rowIndex) =>
-          row.split('').map((pixel, colIndex) => (
+          row.split("").map((pixel, colIndex) => (
             <div
               key={`${rowIndex}-${colIndex}`}
               style={{
@@ -64,13 +62,13 @@ export function PixelWizardAvatar({ size = 120 }: { size?: number }) {
           ))
         )}
       </div>
-      
+
       {/* Floating code symbols around the avatar */}
       <div className="absolute -top-2 -right-2 text-green-400 text-xs opacity-80 animate-pulse">
         &lt;/&gt;
       </div>
       <div className="absolute -bottom-1 -left-2 text-blue-400 text-xs opacity-80 animate-pulse delay-1000">
-        { }
+        {}
       </div>
       <div className="absolute top-2 -left-3 text-purple-400 text-xs opacity-80 animate-pulse delay-500">
         #
