@@ -5,18 +5,24 @@ import {
   Twitter,
   Linkedin,
   Instagram,
-  Terminal,
-  Code,
-  Zap,
-  Globe,
-  Mail,
-  ChevronRight,
+  Home,
+  User,
+  Briefcase,
+  FolderGit2,
+  Send,
 } from "lucide-react";
-import { SectionId } from "./Portfolio";
+import { SectionId } from "@/app/components/layout/Portfolio";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface NavItem {
   id: SectionId;
-  name: string;
+  label: string;
   icon: React.ElementType;
 }
 
@@ -24,7 +30,6 @@ interface SocialItem {
   name: string;
   icon: React.ElementType;
   href: string;
-  color: string;
 }
 
 interface SidebarProps {
@@ -32,16 +37,22 @@ interface SidebarProps {
   setActiveSection: (section: SectionId) => void;
 }
 
+interface NavItemProps {
+  item: NavItem;
+  activeSection: SectionId;
+  onClick: () => void;
+}
+
 export default function Sidebar({
   activeSection,
   setActiveSection,
 }: SidebarProps) {
   const navItems: NavItem[] = [
-    { id: "home", name: "Home", icon: Terminal },
-    { id: "about", name: "About", icon: Code },
-    { id: "experience", name: "Experience", icon: Zap },
-    { id: "projects", name: "Projects", icon: Globe },
-    { id: "contact", name: "Contact", icon: Mail },
+    { id: "home", label: "Home", icon: Home },
+    { id: "about", label: "About", icon: User },
+    { id: "experience", label: "Experience", icon: Briefcase },
+    { id: "projects", label: "Projects", icon: FolderGit2 },
+    { id: "contact", label: "Contact", icon: Send },
   ];
 
   const socialItems: SocialItem[] = [
@@ -49,90 +60,90 @@ export default function Sidebar({
       name: "GitHub",
       icon: Github,
       href: "https://github.com/micci184",
-      color: "#333",
     },
     {
       name: "Twitter",
       icon: Twitter,
       href: "https://twitter.com/micci184",
-      color: "#1DA1F2",
     },
     {
       name: "LinkedIn",
       icon: Linkedin,
       href: "https://linkedin.com/in/micci184",
-      color: "#0077B5",
     },
     {
       name: "Instagram",
       icon: Instagram,
       href: "https://instagram.com/micci184",
-      color: "#E4405F",
     },
   ];
 
+  const handleSectionChange = (section: SectionId) => {
+    setActiveSection(section);
+  };
+
   return (
-    <div className="w-80 glass border-r border-border/20 flex flex-col">
-      {/* Logo */}
-      <div className="p-8 border-b border-border/20">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-lg bg-primary flex items-center justify-center neon-glow">
-            <span className="text-background font-bold text-xl">M</span>
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-white">micci184</h1>
-            <p className="text-sm text-slate">Cloud Engineer</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 p-6">
-        <div className="space-y-2">
-          {navItems.map(({ id, name, icon: Icon }) => (
-            <button
-              key={id}
-              onClick={() => setActiveSection(id)}
-              className={`w-full flex items-center gap-4 px-6 py-4 rounded-xl transition-all duration-300 group ${
-                activeSection === id
-                  ? "bg-primary/10 text-primary border border-primary/20 neon-glow"
-                  : "text-slate hover:text-white hover:bg-muted/50"
-              }`}
-            >
-              <Icon className="w-5 h-5" />
-              <span className="font-medium">{name}</span>
-              {activeSection === id && (
-                <ChevronRight className="w-4 h-4 ml-auto" />
-              )}
-            </button>
+    <aside className="fixed left-0 top-0 z-50 flex h-full w-20 flex-col items-center justify-between border-r border-border bg-card py-8">
+      <div className="flex flex-col items-center gap-y-6">
+        <nav className="flex flex-col items-center gap-y-4">
+          {navItems.map((item) => (
+            <NavItem
+              key={item.id}
+              item={item}
+              activeSection={activeSection}
+              onClick={() => handleSectionChange(item.id)}
+            />
           ))}
-        </div>
-      </nav>
-
-      {/* Social Links */}
-      <div className="p-6 border-t border-border/20">
-        <div className="flex justify-center gap-4">
-          {socialItems.map(({ name, icon: Icon, href }) => (
-            <a
-              key={name}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 glass rounded-lg flex items-center justify-center hover:neon-glow transition-all duration-300 group"
-            >
-              <Icon className="w-5 h-5 text-slate group-hover:text-primary" />
-            </a>
-          ))}
-        </div>
+        </nav>
       </div>
 
-      {/* Status */}
-      <div className="p-6 border-t border-border/20">
-        <div className="flex items-center gap-3 text-sm">
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-          <span className="text-slate">Available for work</span>
-        </div>
+      <div className="flex flex-col items-center gap-y-6">
+        <ThemeToggle />
+        {socialItems.map(({ name, icon: Icon, href }) => (
+          <TooltipProvider key={name}>
+            <Tooltip delayDuration={0}>
+              <TooltipTrigger asChild>
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <Icon className="h-6 w-6" />
+                  <span className="sr-only">{name}</span>
+                </a>
+              </TooltipTrigger>
+              <TooltipContent side="right">{name}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        ))}
       </div>
-    </div>
+    </aside>
+  );
+}
+
+function NavItem({ item, activeSection, onClick }: NavItemProps) {
+  const isActive = activeSection === item.id;
+  return (
+    <TooltipProvider>
+      <Tooltip delayDuration={0}>
+        <TooltipTrigger asChild>
+          <button
+            onClick={onClick}
+            className={`group relative flex h-12 w-12 items-center justify-center rounded-full transition-all duration-300 ease-in-out ${
+              isActive
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+            }`}
+          >
+            <item.icon className="h-6 w-6" />
+            <span className="sr-only">{item.label}</span>
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="right" className="ml-2">
+          {item.label}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }
