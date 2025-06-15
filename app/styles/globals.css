@@ -184,6 +184,13 @@
   background: rgba(0, 245, 255, 0.8);
 }
 
+/* Pixel art styles */
+.pixel-art {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
 /* Animation keyframes */
 @keyframes float {
   0%,

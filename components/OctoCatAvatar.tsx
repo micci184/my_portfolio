@@ -32,16 +32,17 @@ export function OctoCatAvatar({ size = 120 }: { size?: number }) {
     "8": "#e1306c", // Pink mouth
   };
 
+  // CSSプロパティをオブジェクトとして定義
+  const pixelArtStyle: React.CSSProperties = {
+    width: size,
+    height: size,
+    imageRendering: "pixelated" as any,
+  };
+
   return (
     <div
       className="relative inline-block pixel-art group"
-      style={{
-        width: size,
-        height: size,
-        imageRendering: "pixelated",
-        WebkitImageRendering: "pixelated",
-        MozImageRendering: "crisp-edges",
-      }}
+      style={pixelArtStyle}
     >
       <div
         className="grid relative transition-transform duration-300 group-hover:scale-110"
