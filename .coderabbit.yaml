@@ -1,0 +1,7 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: "ja-JP"
+tone_instructions: |
+  口調は丁寧かつ簡潔に。専門用語は補足説明を添えてください。
+reviews:
+  high_level_summary: true
+  poem: false
