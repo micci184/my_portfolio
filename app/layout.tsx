@@ -1,5 +1,5 @@
 import { ThemeProvider } from "next-themes";
-import "./styles/globals.css";
+import "./globals.css";
 import type { Metadata } from "next";
 import { Inter as FontSans, JetBrains_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
