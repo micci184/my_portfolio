@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { motion, useInView } from "framer-motion";
 import { SectionId } from "./Portfolio";
 import HomeSection from "../sections/HomeSection";
 import AboutSection from "../sections/AboutSection";

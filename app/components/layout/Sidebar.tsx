@@ -82,7 +82,7 @@ export default function Sidebar({
   };
 
   return (
-    <div
+    <aside
       className={cn(
         "relative flex h-screen flex-col border-r bg-card transition-all duration-300 ease-in-out",
         isCollapsed ? "w-20" : "w-64"
@@ -123,7 +123,7 @@ export default function Sidebar({
           <span className="sr-only">Toggle sidebar</span>
         </Button>
       </div>
-    </div>
+    </aside>
   );
 }
 
