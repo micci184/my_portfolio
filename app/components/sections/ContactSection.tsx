@@ -44,36 +44,44 @@ export default function ContactSection() {
   ];
 
   return (
-    <div className="flex items-center justify-center h-full p-8">
-      <div className="max-w-4xl mx-auto text-center space-y-12">
+    <div className="flex h-full w-full items-center justify-center p-4 pb-20 sm:p-6 md:p-8 md:pb-8">
+      <div className="mx-auto w-full max-w-4xl space-y-10 text-center md:space-y-12">
         <div>
-          <h2 className="text-4xl font-bold text-white mb-6">
+          <h2 className="mb-4 text-2xl font-bold md:mb-6 md:text-3xl lg:text-4xl">
             Let's Build Something Amazing
           </h2>
-          <p className="text-xl text-light-slate max-w-2xl mx-auto leading-relaxed">
+          <p className="mx-auto max-w-2xl text-base leading-relaxed text-light-slate md:text-lg">
             I'm always interested in new opportunities and exciting cloud
             projects. Whether you need a cloud architect, full-stack developer,
             or just want to chat about tech, feel free to reach out!
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
-          <div className="glass p-8 rounded-2xl hover:neon-glow transition-all duration-300 group">
-            <Mail className="w-12 h-12 text-primary mb-4 mx-auto group-hover:scale-110 transition-transform duration-300" />
-            <h3 className="text-xl font-semibold text-white mb-2">Email</h3>
-            <p className="text-slate mb-4">Drop me a line anytime</p>
+        <div className="mx-auto grid max-w-2xl gap-6 md:grid-cols-2 md:gap-8">
+          <div className="glass group rounded-2xl p-6 transition-all duration-300 hover:neon-glow">
+            <Mail className="mx-auto mb-3 h-8 w-8 text-primary transition-transform duration-300 group-hover:scale-110 md:h-10 md:w-10" />
+            <h3 className="mb-2 text-lg font-semibold text-white md:text-xl">
+              Email
+            </h3>
+            <p className="mb-4 text-sm text-slate md:text-base">
+              Drop me a line anytime
+            </p>
             <Button
               asChild
-              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              className="bg-primary text-primary-foreground hover:bg-primary/90"
             >
               <a href="mailto:contact@micci184.dev">Send Email</a>
             </Button>
           </div>
 
-          <div className="glass p-8 rounded-2xl hover:neon-glow transition-all duration-300 group">
-            <Download className="w-12 h-12 text-primary mb-4 mx-auto group-hover:scale-110 transition-transform duration-300" />
-            <h3 className="text-xl font-semibold text-white mb-2">Resume</h3>
-            <p className="text-slate mb-4">View my full experience</p>
+          <div className="glass group rounded-2xl p-6 transition-all duration-300 hover:neon-glow">
+            <Download className="mx-auto mb-3 h-8 w-8 text-primary transition-transform duration-300 group-hover:scale-110 md:h-10 md:w-10" />
+            <h3 className="mb-2 text-lg font-semibold text-white md:text-xl">
+              Resume
+            </h3>
+            <p className="mb-4 text-sm text-slate md:text-base">
+              View my full experience
+            </p>
             <Button
               asChild
               variant="outline"
@@ -87,19 +95,19 @@ export default function ContactSection() {
         </div>
 
         <div>
-          <h3 className="text-2xl font-semibold text-white mb-8">
+          <h3 className="mb-6 text-xl font-semibold md:mb-8 md:text-2xl">
             Connect With Me
           </h3>
-          <div className="flex justify-center gap-6">
+          <div className="flex justify-center gap-4 md:gap-6">
             {socialItems.map(({ name, icon: Icon, href }) => (
               <a
                 key={name}
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-16 h-16 glass rounded-full flex items-center justify-center hover:neon-glow transition-all duration-300 group"
+                className="glass group flex h-12 w-12 items-center justify-center rounded-full transition-all duration-300 hover:neon-glow md:h-14 md:w-14"
               >
-                <Icon className="w-8 h-8 text-white group-hover:scale-110 transition-transform duration-300" />
+                <Icon className="h-6 w-6 text-white transition-transform duration-300 group-hover:scale-110 md:h-7 md:w-7" />
               </a>
             ))}
           </div>
