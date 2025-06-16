@@ -14,30 +14,26 @@ const fontMono = JetBrains_Mono({
   variable: "--font-mono",
 });
 
+// 環境変数またはデフォルト値からサイトURLを取得
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://micci184.dev";
+
 export const metadata: Metadata = {
   title: "micci184 - Full Stack Engineer & Cloud Architect",
   description:
     "Portfolio of micci184, a Full Stack Engineer and Cloud Architect specializing in cloud-native applications and infrastructure.",
+  // 重要度の高いキーワードに絞り込み
   keywords: [
     "micci184",
     "Full Stack Engineer",
     "Cloud Architect",
-    "Web Developer",
     "Next.js",
-    "React",
-    "TypeScript",
     "AWS",
-    "GCP",
-    "Azure",
   ],
+  // 一貫性のある設定
   authors: [{ name: "micci184" }],
   creator: "micci184",
-  publisher: "micci184",
-  robots: {
-    index: true,
-    follow: true,
-  },
-  metadataBase: new URL("https://micci184.dev"),
+  // robots設定はデフォルトのため省略可能だが、明示的に記述
+  metadataBase: new URL(siteUrl),
   alternates: {
     canonical: "/",
   },
@@ -45,13 +41,13 @@ export const metadata: Metadata = {
     title: "micci184 - Full Stack Engineer & Cloud Architect",
     description:
       "Portfolio of micci184, a Full Stack Engineer and Cloud Architect specializing in cloud-native applications and infrastructure.",
-    url: "https://micci184.dev",
+    url: siteUrl,
     siteName: "micci184 Portfolio",
     locale: "ja_JP",
     type: "website",
     images: [
       {
-        url: "/images/og-image.png",
+        url: `${siteUrl}/images/og-image.png`,
         width: 1200,
         height: 630,
         alt: "micci184 Portfolio",
@@ -64,12 +60,11 @@ export const metadata: Metadata = {
     description:
       "Portfolio of micci184, a Full Stack Engineer and Cloud Architect specializing in cloud-native applications and infrastructure.",
     creator: "@micci184",
-    images: ["/images/og-image.png"],
+    site: "@micci184", // サイト運営用アカウント
+    images: [`${siteUrl}/images/og-image.png`],
   },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-  },
+  // Next.js公式ドキュメントに準拠した文字列形式
+  viewport: "width=device-width, initial-scale=1",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)", color: "#0f172a" },
