@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import {
   Github,
   Twitter,
@@ -10,6 +11,8 @@ import {
   Briefcase,
   FolderGit2,
   Send,
+  PanelLeftClose,
+  PanelRightClose,
 } from "lucide-react";
 import { SectionId } from "@/components/layout/Portfolio";
 import {
@@ -19,8 +22,10 @@ import {
   TooltipTrigger,
 } from "@components/ui/tooltip";
 import { ThemeToggle } from "@components/theme-toggle";
+import { cn } from "@/lib/utils";
+import { Button } from "@components/ui/button";
 
-interface NavItem {
+interface NavItemData {
   id: SectionId;
   label: string;
   icon: React.ElementType;
@@ -38,8 +43,9 @@ interface SidebarProps {
 }
 
 interface NavItemProps {
-  item: NavItem;
+  item: NavItemData;
   activeSection: SectionId;
+  isCollapsed: boolean;
   onClick: () => void;
 }
 
@@ -47,7 +53,9 @@ export default function Sidebar({
   activeSection,
   setActiveSection,
 }: SidebarProps) {
-  const navItems: NavItem[] = [
+  const [isCollapsed, setIsCollapsed] = React.useState(true);
+
+  const navItems: NavItemData[] = [
     { id: "home", label: "Home", icon: Home },
     { id: "about", label: "About", icon: User },
     { id: "experience", label: "Experience", icon: Briefcase },
@@ -56,16 +64,8 @@ export default function Sidebar({
   ];
 
   const socialItems: SocialItem[] = [
-    {
-      name: "GitHub",
-      icon: Github,
-      href: "https://github.com/micci184",
-    },
-    {
-      name: "Twitter",
-      icon: Twitter,
-      href: "https://twitter.com/micci184",
-    },
+    { name: "GitHub", icon: Github, href: "https://github.com/micci184" },
+    { name: "Twitter", icon: Twitter, href: "https://twitter.com/micci184" },
     {
       name: "LinkedIn",
       icon: Linkedin,
@@ -83,67 +83,90 @@ export default function Sidebar({
   };
 
   return (
-    <aside className="fixed left-0 top-0 z-50 flex h-full w-20 flex-col items-center justify-between border-r border-border bg-card py-8">
-      <div className="flex flex-col items-center gap-y-6">
-        <nav className="flex flex-col items-center gap-y-4">
+    <div
+      className={cn(
+        "relative flex h-full flex-col border-r bg-card transition-all duration-300 ease-in-out",
+        isCollapsed ? "w-20" : "w-64"
+      )}
+    >
+      <div className="flex flex-1 flex-col gap-y-4 overflow-y-auto p-4">
+        <nav className="flex flex-col gap-y-2">
           {navItems.map((item) => (
             <NavItem
               key={item.id}
               item={item}
               activeSection={activeSection}
+              isCollapsed={isCollapsed}
               onClick={() => handleSectionChange(item.id)}
             />
           ))}
         </nav>
       </div>
 
-      <div className="flex flex-col items-center gap-y-6">
+      <div className="mt-auto flex flex-col items-center gap-y-4 p-4">
+        {!isCollapsed && (
+          <div className="flex items-center justify-center gap-x-4">
+            {socialItems.map(({ name, icon: Icon, href }) => (
+              <a
+                key={name}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <Icon className="h-5 w-5" />
+                <span className="sr-only">{name}</span>
+              </a>
+            ))}
+          </div>
+        )}
         <ThemeToggle />
-        {socialItems.map(({ name, icon: Icon, href }) => (
-          <TooltipProvider key={name}>
-            <Tooltip delayDuration={0}>
-              <TooltipTrigger asChild>
-                <a
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <Icon className="h-6 w-6" />
-                  <span className="sr-only">{name}</span>
-                </a>
-              </TooltipTrigger>
-              <TooltipContent side="right">{name}</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        ))}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-10 w-10"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+        >
+          {isCollapsed ? <PanelRightClose /> : <PanelLeftClose />}
+          <span className="sr-only">Toggle sidebar</span>
+        </Button>
       </div>
-    </aside>
+    </div>
   );
 }
 
-function NavItem({ item, activeSection, onClick }: NavItemProps) {
+function NavItem({ item, activeSection, onClick, isCollapsed }: NavItemProps) {
   const isActive = activeSection === item.id;
+  if (isCollapsed) {
+    return (
+      <TooltipProvider>
+        <Tooltip delayDuration={0}>
+          <TooltipTrigger asChild>
+            <Button
+              onClick={onClick}
+              variant={isActive ? "default" : "ghost"}
+              className="h-12 w-12"
+              aria-label={item.label}
+            >
+              <item.icon className="h-6 w-6" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="right" className="ml-2">
+            {item.label}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+
   return (
-    <TooltipProvider>
-      <Tooltip delayDuration={0}>
-        <TooltipTrigger asChild>
-          <button
-            onClick={onClick}
-            className={`group relative flex h-12 w-12 items-center justify-center rounded-full transition-all duration-300 ease-in-out ${
-              isActive
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-            }`}
-          >
-            <item.icon className="h-6 w-6" />
-            <span className="sr-only">{item.label}</span>
-          </button>
-        </TooltipTrigger>
-        <TooltipContent side="right" className="ml-2">
-          {item.label}
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Button
+      onClick={onClick}
+      variant={isActive ? "default" : "ghost"}
+      className="h-12 w-full justify-start gap-x-4 px-4"
+    >
+      <item.icon className="h-6 w-6" />
+      <span>{item.label}</span>
+    </Button>
   );
 }

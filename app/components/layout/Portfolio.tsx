@@ -62,7 +62,7 @@ export default function Portfolio() {
   return (
     <div
       id="portfolio"
-      className="min-h-screen flex bg-background text-foreground overflow-hidden"
+      className="min-h-screen flex bg-background text-foreground"
     >
       <Sidebar
         activeSection={activeSection}
@@ -70,7 +70,7 @@ export default function Portfolio() {
       />
 
       {/* Main Content */}
-      <div className="flex-1 relative overflow-hidden">
+      <main className="flex-1 relative overflow-y-auto">
         <div
           className={`h-full transition-all duration-700 ease-in-out transform ${
             isLoaded ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"
@@ -84,7 +84,7 @@ export default function Portfolio() {
           <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div>
           <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
