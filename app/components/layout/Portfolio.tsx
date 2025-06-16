@@ -1,88 +1,34 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Sidebar from "./Sidebar";
-import HomeSection from "../sections/HomeSection";
-import AboutSection from "../sections/AboutSection";
-import ExperienceSection from "../sections/ExperienceSection";
-import { ProjectsSection } from "../sections/ProjectsSection";
-import ContactSection from "../sections/ContactSection";
+import { useState } from "react";
+import Sidebar from "@/components/layout/Sidebar";
+import Content from "@/components/layout/Content";
+import Header from "@/components/layout/Header";
+import { ThemeToggle } from "@components/theme-toggle";
 
-export type SectionId =
-  | "home"
-  | "about"
-  | "experience"
-  | "projects"
-  | "contact";
+export type SectionId = "home" | "about" | "skills" | "projects" | "contact";
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState<SectionId>("home");
-  const [isLoaded, setIsLoaded] = useState(false);
 
-  useEffect(() => {
-    setIsLoaded(true);
-
-    // イベントリスナーを追加して、セクション変更イベントを処理
-    const handleSectionChange = (e: Event) => {
-      const { section } = (e as CustomEvent<{ section: SectionId }>).detail;
-      setActiveSection(section);
-    };
-
-    const portfolioElement = document.getElementById("portfolio");
-    portfolioElement?.addEventListener(
-      "changeSection",
-      handleSectionChange as EventListener
-    );
-
-    return () => {
-      portfolioElement?.removeEventListener(
-        "changeSection",
-        handleSectionChange as EventListener
-      );
-    };
-  }, []);
-
-  const renderContent = () => {
-    switch (activeSection) {
-      case "home":
-        return <HomeSection />;
-      case "about":
-        return <AboutSection />;
-      case "experience":
-        return <ExperienceSection />;
-      case "projects":
-        return <ProjectsSection />;
-      case "contact":
-        return <ContactSection />;
-      default:
-        return <HomeSection />;
-    }
+  const handleSectionChange = (section: SectionId) => {
+    setActiveSection(section);
   };
 
   return (
-    <div
-      id="portfolio"
-      className="min-h-screen flex bg-background text-foreground"
-    >
+    <div className="flex bg-background text-foreground">
       <Sidebar
         activeSection={activeSection}
         setActiveSection={setActiveSection}
       />
-
-      {/* Main Content */}
-      <main className="flex-1 relative overflow-y-auto">
-        <div
-          className={`h-full transition-all duration-700 ease-in-out transform ${
-            isLoaded ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"
-          }`}
-        >
-          {renderContent()}
-        </div>
-
+      <main className="relative flex-1 overflow-y-auto">
+        <ThemeToggle className="absolute right-6 top-6 z-50" />
+        <Header />
+        <Content activeSection={activeSection} />
         {/* Background Effects */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+        <div className="absolute inset-0 -z-10 pointer-events-none">
+          <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse-slow"></div>
+          <div className="absolute bottom-1/4 left-1/4 w-72 h-72 bg-secondary/10 rounded-full blur-3xl animate-pulse-slow delay-2000"></div>
         </div>
       </main>
     </div>

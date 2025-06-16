@@ -21,7 +21,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@components/ui/tooltip";
-import { ThemeToggle } from "@components/theme-toggle";
 import { cn } from "@/lib/utils";
 import { Button } from "@components/ui/button";
 
@@ -85,7 +84,7 @@ export default function Sidebar({
   return (
     <div
       className={cn(
-        "relative flex h-full flex-col border-r bg-card transition-all duration-300 ease-in-out",
+        "relative flex h-screen flex-col border-r bg-card transition-all duration-300 ease-in-out",
         isCollapsed ? "w-20" : "w-64"
       )}
     >
@@ -104,23 +103,16 @@ export default function Sidebar({
       </div>
 
       <div className="mt-auto flex flex-col items-center gap-y-4 p-4">
-        {!isCollapsed && (
-          <div className="flex items-center justify-center gap-x-4">
-            {socialItems.map(({ name, icon: Icon, href }) => (
-              <a
-                key={name}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <Icon className="h-5 w-5" />
-                <span className="sr-only">{name}</span>
-              </a>
-            ))}
-          </div>
-        )}
-        <ThemeToggle />
+        <div
+          className={cn(
+            "flex items-center justify-center",
+            isCollapsed ? "flex-col gap-y-4" : "gap-x-4"
+          )}
+        >
+          {socialItems.map((item) => (
+            <SocialItem key={item.name} item={item} isCollapsed={isCollapsed} />
+          ))}
+        </div>
         <Button
           variant="ghost"
           size="icon"
@@ -168,5 +160,46 @@ function NavItem({ item, activeSection, onClick, isCollapsed }: NavItemProps) {
       <item.icon className="h-6 w-6" />
       <span>{item.label}</span>
     </Button>
+  );
+}
+
+function SocialItem({
+  item,
+  isCollapsed,
+}: {
+  item: SocialItem;
+  isCollapsed: boolean;
+}) {
+  if (isCollapsed) {
+    return (
+      <TooltipProvider>
+        <Tooltip delayDuration={0}>
+          <TooltipTrigger asChild>
+            <a
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <item.icon className="h-5 w-5" />
+              <span className="sr-only">{item.name}</span>
+            </a>
+          </TooltipTrigger>
+          <TooltipContent side="right">{item.name}</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+
+  return (
+    <a
+      href={item.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-muted-foreground transition-colors hover:text-foreground"
+    >
+      <item.icon className="h-5 w-5" />
+      <span className="sr-only">{item.name}</span>
+    </a>
   );
 }
