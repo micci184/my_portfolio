@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
-import { siteConfig } from "@/config/site";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -12,7 +11,7 @@ const fontSans = FontSans({
 });
 
 const fontMono = localFont({
-  src: "./fonts/JetBrainsMono-VariableFont_wght.ttf",
+  src: "../public/fonts/JetBrainsMono-VariableFont_wght.ttf",
   variable: "--font-mono",
 });
 
