@@ -56,12 +56,14 @@ export default function AboutSection() {
   ];
 
   return (
-    <div className="flex items-center justify-center h-full p-8">
-      <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+    <div className="flex h-full items-center justify-center p-4 md:p-8">
+      <div className="mx-auto grid max-w-6xl items-center gap-8 lg:grid-cols-2 lg:gap-16">
         <div className="space-y-8">
           <div>
-            <h2 className="text-4xl font-bold text-white mb-6">About Me</h2>
-            <div className="space-y-4 text-light-slate text-lg leading-relaxed">
+            <h2 className="mb-6 text-3xl font-bold text-white md:text-4xl">
+              About Me
+            </h2>
+            <div className="space-y-4 text-lg leading-relaxed text-light-slate">
               <p>
                 Hi! I'm{" "}
                 <span className="text-primary font-semibold">micci184</span>, a
@@ -87,7 +89,7 @@ export default function AboutSection() {
           </div>
 
           <div>
-            <h3 className="text-2xl font-semibold text-white mb-6">
+            <h3 className="mb-6 text-2xl font-semibold text-white">
               Technical Skills
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

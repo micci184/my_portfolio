@@ -52,9 +52,9 @@ export default function ExperienceSection() {
   ];
 
   return (
-    <div className="flex items-center justify-center h-full p-8">
-      <div className="max-w-4xl mx-auto space-y-8">
-        <h2 className="text-4xl font-bold text-white text-center mb-12">
+    <div className="flex h-full items-center justify-center p-4 md:p-8">
+      <div className="mx-auto max-w-4xl space-y-8">
+        <h2 className="mb-12 text-center text-3xl font-bold text-white md:text-4xl">
           Professional Experience
         </h2>
 
@@ -62,28 +62,28 @@ export default function ExperienceSection() {
           {experiences.map((exp, index) => (
             <div
               key={index}
-              className="glass p-8 rounded-2xl hover:neon-glow transition-all duration-300 group relative overflow-hidden"
+              className="glass group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:neon-glow md:p-8"
             >
-              <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-primary/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
 
               <div className="relative z-10">
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
+                <div className="mb-6 flex flex-col lg:flex-row lg:items-center lg:justify-between">
                   <div>
-                    <h3 className="text-2xl font-semibold text-white mb-2">
+                    <h3 className="mb-2 text-xl font-semibold text-white md:text-2xl">
                       {exp.title}
                     </h3>
-                    <div className="flex items-center gap-2">
-                      <span className="text-primary font-medium text-lg">
+                    <div className="flex flex-col items-start gap-1 text-slate sm:flex-row sm:items-center sm:gap-2">
+                      <span className="text-lg font-medium text-primary">
                         {exp.company}
                       </span>
-                      <span className="text-slate">•</span>
-                      <span className="text-slate">{exp.period}</span>
+                      <span className="hidden sm:inline">•</span>
+                      <span>{exp.period}</span>
                     </div>
                   </div>
-                  <ChevronRight className="w-6 h-6 text-primary group-hover:translate-x-2 transition-transform duration-300" />
+                  <ChevronRight className="absolute right-6 top-6 h-6 w-6 text-primary transition-transform duration-300 group-hover:translate-x-1 lg:static lg:block" />
                 </div>
 
-                <p className="text-light-slate text-lg mb-6 leading-relaxed">
+                <p className="mb-6 leading-relaxed text-light-slate">
                   {exp.description}
                 </p>
 

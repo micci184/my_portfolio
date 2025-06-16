@@ -71,19 +71,19 @@ export function ProjectsSection() {
   ];
 
   return (
-    <div className="flex items-center justify-center h-full p-8">
-      <div className="max-w-7xl mx-auto space-y-8">
-        <h2 className="text-4xl font-bold text-white text-center mb-12">
+    <div className="flex h-full items-center justify-center p-4 md:p-8">
+      <div className="mx-auto max-w-7xl space-y-8">
+        <h2 className="mb-12 text-center text-3xl font-bold text-white md:text-4xl">
           Featured Projects
         </h2>
 
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           {projects
             .filter((p) => p.featured)
             .map((project) => (
               <div
                 key={project.id}
-                className="glass rounded-2xl overflow-hidden hover:neon-glow transition-all duration-300 group"
+                className="glass group overflow-hidden rounded-2xl transition-all duration-300 hover:neon-glow"
               >
                 <div className="relative overflow-hidden">
                   <Image
@@ -91,7 +91,7 @@ export function ProjectsSection() {
                     alt={project.title}
                     width={600}
                     height={400}
-                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="h-56 w-full object-cover transition-transform duration-500 group-hover:scale-110 sm:h-64"
                     priority={project.featured}
                   />
                   <div className="absolute inset-0 bg-black/60"></div>
@@ -115,11 +115,11 @@ export function ProjectsSection() {
                   </div>
                 </div>
 
-                <div className="p-8">
-                  <h3 className="text-2xl font-semibold text-white mb-4">
+                <div className="p-6 md:p-8">
+                  <h3 className="mb-4 text-xl font-semibold text-white md:text-2xl">
                     {project.title}
                   </h3>
-                  <p className="text-light-slate mb-6 leading-relaxed">
+                  <p className="mb-6 leading-relaxed text-light-slate">
                     {project.description}
                   </p>
 

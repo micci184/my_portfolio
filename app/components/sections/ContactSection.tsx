@@ -44,22 +44,22 @@ export default function ContactSection() {
   ];
 
   return (
-    <div className="flex items-center justify-center h-full p-8">
-      <div className="max-w-4xl mx-auto text-center space-y-12">
+    <div className="flex h-full items-center justify-center p-4 md:p-8">
+      <div className="mx-auto max-w-4xl space-y-12 text-center">
         <div>
-          <h2 className="text-4xl font-bold text-white mb-6">
+          <h2 className="mb-6 text-3xl font-bold text-white md:text-4xl">
             Let's Build Something Amazing
           </h2>
-          <p className="text-xl text-light-slate max-w-2xl mx-auto leading-relaxed">
+          <p className="mx-auto max-w-2xl leading-relaxed text-light-slate md:text-xl">
             I'm always interested in new opportunities and exciting cloud
             projects. Whether you need a cloud architect, full-stack developer,
             or just want to chat about tech, feel free to reach out!
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
-          <div className="glass p-8 rounded-2xl hover:neon-glow transition-all duration-300 group">
-            <Mail className="w-12 h-12 text-primary mb-4 mx-auto group-hover:scale-110 transition-transform duration-300" />
+        <div className="mx-auto grid max-w-2xl gap-8 md:grid-cols-2">
+          <div className="glass group rounded-2xl p-6 transition-all duration-300 hover:neon-glow md:p-8">
+            <Mail className="mx-auto mb-4 h-10 w-10 text-primary transition-transform duration-300 group-hover:scale-110 md:h-12 md:w-12" />
             <h3 className="text-xl font-semibold text-white mb-2">Email</h3>
             <p className="text-slate mb-4">Drop me a line anytime</p>
             <Button
@@ -70,8 +70,8 @@ export default function ContactSection() {
             </Button>
           </div>
 
-          <div className="glass p-8 rounded-2xl hover:neon-glow transition-all duration-300 group">
-            <Download className="w-12 h-12 text-primary mb-4 mx-auto group-hover:scale-110 transition-transform duration-300" />
+          <div className="glass group rounded-2xl p-6 transition-all duration-300 hover:neon-glow md:p-8">
+            <Download className="mx-auto mb-4 h-10 w-10 text-primary transition-transform duration-300 group-hover:scale-110 md:h-12 md:w-12" />
             <h3 className="text-xl font-semibold text-white mb-2">Resume</h3>
             <p className="text-slate mb-4">View my full experience</p>
             <Button
@@ -87,19 +87,19 @@ export default function ContactSection() {
         </div>
 
         <div>
-          <h3 className="text-2xl font-semibold text-white mb-8">
+          <h3 className="mb-8 text-2xl font-semibold text-white">
             Connect With Me
           </h3>
-          <div className="flex justify-center gap-6">
+          <div className="flex justify-center gap-4 md:gap-6">
             {socialItems.map(({ name, icon: Icon, href }) => (
               <a
                 key={name}
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-16 h-16 glass rounded-full flex items-center justify-center hover:neon-glow transition-all duration-300 group"
+                className="glass group flex h-14 w-14 items-center justify-center rounded-full transition-all duration-300 hover:neon-glow md:h-16 md:w-16"
               >
-                <Icon className="w-8 h-8 text-white group-hover:scale-110 transition-transform duration-300" />
+                <Icon className="h-7 w-7 text-white transition-transform duration-300 group-hover:scale-110 md:h-8 md:w-8" />
               </a>
             ))}
           </div>
