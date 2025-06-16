@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Sidebar from "@/components/layout/Sidebar";
-import Content from "@/components/layout/Content";
-import { ThemeToggle } from "@components/theme-toggle";
-import { Button } from "@components/ui/button";
+import Sidebar from "@/app/components/layout/Sidebar";
+import Content from "@/app/components/layout/Content";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 

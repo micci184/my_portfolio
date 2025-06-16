@@ -14,15 +14,15 @@ import {
   PanelLeftClose,
   PanelRightClose,
 } from "lucide-react";
-import { SectionId } from "@/components/layout/Portfolio";
+import { SectionId } from "@/app/components/layout/Portfolio";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@components/ui/tooltip";
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Button } from "@components/ui/button";
+import { Button } from "@/components/ui/button";
 
 interface NavItemData {
   id: SectionId;
