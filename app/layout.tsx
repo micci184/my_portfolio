@@ -1,6 +1,20 @@
-import "@styles/globals.css";
+import { ThemeProvider } from "next-themes";
+import "@/app/styles/globals.css";
 import type { Metadata } from "next";
-import { ThemeProvider } from "@components/theme-provider";
+import { Inter as FontSans } from "next/font/google";
+import localFont from "next/font/local";
+import { cn } from "@/lib/utils";
+import { siteConfig } from "@/config/site";
+
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+const fontMono = localFont({
+  src: "./fonts/JetBrainsMono-VariableFont_wght.ttf",
+  variable: "--font-mono",
+});
 
 export const metadata: Metadata = {
   title: "micci184 - Full Stack Engineer & Cloud Architect",
@@ -15,7 +29,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja" suppressHydrationWarning>
-      <body className="min-h-screen bg-background font-sans text-foreground">
+      <head />
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable,
+          fontMono.variable
+        )}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
