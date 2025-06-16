@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Sidebar from "@/components/layout/Sidebar";
 import Content from "@/components/layout/Content";
-import Header from "@/components/layout/Header";
 import { ThemeToggle } from "@components/theme-toggle";
 
 export type SectionId =
@@ -28,7 +27,6 @@ export default function Portfolio() {
       />
       <main className="relative flex-1 overflow-y-auto">
         <ThemeToggle className="absolute right-6 top-6 z-50" />
-        <Header />
         <Content activeSection={activeSection} />
         {/* Background Effects */}
         <div className="absolute inset-0 -z-10 pointer-events-none">
