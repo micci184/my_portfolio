@@ -11,14 +11,14 @@ import {
   FolderGit2,
   Send,
 } from "lucide-react";
-import { SectionId } from "@/app/components/layout/Portfolio";
+import { SectionId } from "@/components/layout/Portfolio";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { ThemeToggle } from "@/components/theme-toggle";
+} from "@components/ui/tooltip";
+import { ThemeToggle } from "@components/theme-toggle";
 
 interface NavItem {
   id: SectionId;

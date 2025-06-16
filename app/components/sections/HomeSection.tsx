@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "@/app/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Play, Mail } from "lucide-react";
 import { SectionId } from "../layout/Portfolio";
 
