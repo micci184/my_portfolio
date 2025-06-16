@@ -1,8 +1,7 @@
 import { ThemeProvider } from "next-themes";
-import "@/app/styles/globals.css";
+import "./styles/globals.css";
 import type { Metadata } from "next";
-import { Inter as FontSans } from "next/font/google";
-import localFont from "next/font/local";
+import { Inter as FontSans, JetBrains_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
 
 const fontSans = FontSans({
@@ -10,8 +9,8 @@ const fontSans = FontSans({
   variable: "--font-sans",
 });
 
-const fontMono = localFont({
-  src: "../public/fonts/JetBrainsMono-VariableFont_wght.ttf",
+const fontMono = JetBrains_Mono({
+  subsets: ["latin"],
   variable: "--font-mono",
 });
 
