@@ -53,6 +53,18 @@ export default function Sidebar({
   setActiveSection,
 }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(true);
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
+  const collapsed = !isMobile && isCollapsed;
 
   const navItems: NavItemData[] = [
     { id: "home", label: "Home", icon: Home },
@@ -85,7 +97,7 @@ export default function Sidebar({
     <aside
       className={cn(
         "relative flex h-screen flex-col border-r bg-card transition-all duration-300 ease-in-out",
-        isCollapsed ? "w-20" : "w-64"
+        collapsed ? "w-20" : "w-64"
       )}
     >
       <div className="flex flex-1 flex-col gap-y-4 overflow-y-auto p-4">
@@ -95,7 +107,7 @@ export default function Sidebar({
               key={item.id}
               item={item}
               activeSection={activeSection}
-              isCollapsed={isCollapsed}
+              isCollapsed={collapsed}
               onClick={() => handleSectionChange(item.id)}
             />
           ))}
@@ -106,22 +118,24 @@ export default function Sidebar({
         <div
           className={cn(
             "flex items-center justify-center",
-            isCollapsed ? "flex-col gap-y-4" : "gap-x-4"
+            collapsed ? "flex-col gap-y-4" : "gap-x-4"
           )}
         >
           {socialItems.map((item) => (
-            <SocialItem key={item.name} item={item} isCollapsed={isCollapsed} />
+            <SocialItem key={item.name} item={item} isCollapsed={collapsed} />
           ))}
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-10 w-10"
-          onClick={() => setIsCollapsed(!isCollapsed)}
-        >
-          {isCollapsed ? <PanelRightClose /> : <PanelLeftClose />}
-          <span className="sr-only">Toggle sidebar</span>
-        </Button>
+        {!isMobile && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10"
+            onClick={() => setIsCollapsed(!isCollapsed)}
+          >
+            {isCollapsed ? <PanelRightClose /> : <PanelLeftClose />}
+            <span className="sr-only">Toggle sidebar</span>
+          </Button>
+        )}
       </div>
     </aside>
   );
