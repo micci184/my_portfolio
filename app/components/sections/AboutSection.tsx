@@ -105,7 +105,7 @@ export default function AboutSection() {
                     {skillGroup.skills.map((skill) => (
                       <span
                         key={skill}
-                        className="rounded border border-border bg-muted px-2 py-1 text-[10px] text-light-slate sm:text-xs"
+                        className="rounded border border-border bg-muted px-2 py-1 text-[10px] text-slate sm:text-xs"
                       >
                         {skill}
                       </span>
@@ -122,10 +122,10 @@ export default function AboutSection() {
             <div className="space-y-4">
               <div className="flex items-center gap-4">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary sm:h-16 sm:w-16">
-                  <Cloud className="h-6 w-6 text-background sm:h-8 sm:w-8" />
+                  <Cloud className="h-6 w-6 text-primary-foreground sm:h-8 sm:w-8" />
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-white sm:text-xl">
+                  <h4 className="text-lg font-semibold text-foreground sm:text-xl">
                     5+ Years
                   </h4>
                   <p className="text-slate text-sm sm:text-base">
@@ -156,24 +156,26 @@ export default function AboutSection() {
               <div className="space-y-2 text-sm sm:text-base">
                 <div className="flex items-center gap-3">
                   <Cloud className="h-5 w-5 text-primary" />
-                  <span className="text-white">Cloud Architecture</span>
+                  <span className="text-foreground">Cloud Architecture</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Server className="h-5 w-5 text-primary" />
-                  <span className="text-white">Microservices Design</span>
+                  <span className="text-foreground">Microservices Design</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Shield className="w-5 h-5 text-primary" />
-                  <span className="text-white">Security & Compliance</span>
+                  <span className="text-foreground">Security & Compliance</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Cpu className="w-5 h-5 text-primary" />
-                  <span className="text-white">Performance Optimization</span>
+                  <span className="text-foreground">
+                    Performance Optimization
+                  </span>
                 </div>
               </div>
 
               <div className="border-t border-border pt-3 sm:pt-4">
-                <h5 className="mb-2 font-semibold text-white">
+                <h5 className="mb-2 font-semibold text-foreground">
                   Certifications
                 </h5>
                 <div className="space-y-1 text-xs text-light-slate sm:text-sm">

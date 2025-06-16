@@ -96,7 +96,7 @@ export default function HomeSection() {
           </Button>
         </div>
 
-        <div className="glass terminal mx-auto mt-8 max-w-3xl md:mt-12">
+        <div className="terminal mx-auto mt-8 max-w-3xl md:mt-12">
           <div className="terminal-header">
             <div className="terminal-dot red"></div>
             <div className="terminal-dot yellow"></div>
@@ -109,7 +109,9 @@ export default function HomeSection() {
             {terminalLines.map((line, index) => (
               <div key={index} className="text-xs sm:text-sm">
                 {line.startsWith("$") ? (
-                  <span className="text-primary">{line}</span>
+                  <span className="text-primary-foreground dark:text-primary">
+                    {line}
+                  </span>
                 ) : line.includes("Account:") ? (
                   <span className="text-yellow-400">{line}</span>
                 ) : line.includes("Ready") || line.includes("nodes") ? (
@@ -122,8 +124,10 @@ export default function HomeSection() {
               </div>
             ))}
             <div className="flex items-center">
-              <span className="text-primary">$ </span>
-              <div className="ml-2 h-4 w-2 animate-pulse bg-primary"></div>
+              <span className="text-primary-foreground dark:text-primary">
+                ${" "}
+              </span>
+              <div className="ml-2 h-4 w-2 animate-pulse bg-primary-foreground dark:bg-primary"></div>
             </div>
           </div>
         </div>
