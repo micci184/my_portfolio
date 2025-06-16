@@ -60,7 +60,7 @@ export default function ContactSection() {
         <div className="mx-auto grid max-w-2xl gap-6 md:grid-cols-2 md:gap-8">
           <div className="glass group rounded-2xl p-6 transition-all duration-300 hover:neon-glow">
             <Mail className="mx-auto mb-3 h-8 w-8 text-primary transition-transform duration-300 group-hover:scale-110 md:h-10 md:w-10" />
-            <h3 className="mb-2 text-lg font-semibold text-white md:text-xl">
+            <h3 className="mb-2 text-lg font-semibold text-foreground md:text-xl">
               Email
             </h3>
             <p className="mb-4 text-sm text-slate md:text-base">
@@ -76,7 +76,7 @@ export default function ContactSection() {
 
           <div className="glass group rounded-2xl p-6 transition-all duration-300 hover:neon-glow">
             <Download className="mx-auto mb-3 h-8 w-8 text-primary transition-transform duration-300 group-hover:scale-110 md:h-10 md:w-10" />
-            <h3 className="mb-2 text-lg font-semibold text-white md:text-xl">
+            <h3 className="mb-2 text-lg font-semibold text-foreground md:text-xl">
               Resume
             </h3>
             <p className="mb-4 text-sm text-slate md:text-base">
@@ -99,15 +99,23 @@ export default function ContactSection() {
             Connect With Me
           </h3>
           <div className="flex justify-center gap-4 md:gap-6">
-            {socialItems.map(({ name, icon: Icon, href }) => (
+            {socialItems.map(({ name, icon: Icon, href, color }) => (
               <a
                 key={name}
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="glass group flex h-12 w-12 items-center justify-center rounded-full transition-all duration-300 hover:neon-glow md:h-14 md:w-14"
+                style={{
+                  borderColor: color,
+                  borderWidth: "2px",
+                }}
               >
-                <Icon className="h-6 w-6 text-white transition-transform duration-300 group-hover:scale-110 md:h-7 md:w-7" />
+                <Icon
+                  className="h-6 w-6 transition-transform duration-300 group-hover:scale-110 md:h-7 md:w-7"
+                  style={{ color: color }}
+                />
+                <span className="sr-only">{name}</span>
               </a>
             ))}
           </div>
