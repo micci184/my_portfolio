@@ -25,7 +25,7 @@ export default function Portfolio() {
         activeSection={activeSection}
         setActiveSection={setActiveSection}
       />
-      <main className="relative flex-1 overflow-y-auto">
+      <main className="relative flex-1">
         <ThemeToggle className="absolute right-6 top-6 z-50" />
         <Content activeSection={activeSection} />
         {/* Background Effects */}
