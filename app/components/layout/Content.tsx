@@ -5,14 +5,14 @@ import { motion, useInView } from "framer-motion";
 import { SectionId } from "./Portfolio";
 import HomeSection from "../sections/HomeSection";
 import AboutSection from "../sections/AboutSection";
-import SkillsSection from "../sections/SkillsSection";
+import ExperienceSection from "../sections/ExperienceSection";
 import ProjectsSection from "../sections/ProjectsSection";
 import ContactSection from "../sections/ContactSection";
 
 const sections: { id: SectionId; component: React.FC }[] = [
   { id: "home", component: HomeSection },
   { id: "about", component: AboutSection },
-  { id: "skills", component: SkillsSection },
+  { id: "experience", component: ExperienceSection },
   { id: "projects", component: ProjectsSection },
   { id: "contact", component: ContactSection },
 ];

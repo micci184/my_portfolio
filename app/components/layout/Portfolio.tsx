@@ -6,7 +6,12 @@ import Content from "@/components/layout/Content";
 import Header from "@/components/layout/Header";
 import { ThemeToggle } from "@components/theme-toggle";
 
-export type SectionId = "home" | "about" | "skills" | "projects" | "contact";
+export type SectionId =
+  | "home"
+  | "about"
+  | "experience"
+  | "projects"
+  | "contact";
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState<SectionId>("home");
