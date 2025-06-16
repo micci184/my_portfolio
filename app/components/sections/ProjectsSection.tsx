@@ -71,13 +71,13 @@ export function ProjectsSection() {
   ];
 
   return (
-    <div className="flex h-full items-center justify-center p-4 md:p-8">
-      <div className="mx-auto max-w-7xl space-y-8">
-        <h2 className="mb-12 text-center text-3xl font-bold text-white md:text-4xl">
+    <div className="flex h-full w-full items-center justify-center p-4 sm:p-6 md:p-8">
+      <div className="mx-auto w-full max-w-7xl space-y-8">
+        <h2 className="mb-8 text-center text-2xl font-bold md:mb-12 md:text-3xl lg:text-4xl">
           Featured Projects
         </h2>
 
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 md:gap-8 lg:grid-cols-2">
           {projects
             .filter((p) => p.featured)
             .map((project) => (
@@ -91,43 +91,47 @@ export function ProjectsSection() {
                     alt={project.title}
                     width={600}
                     height={400}
-                    className="h-56 w-full object-cover transition-transform duration-500 group-hover:scale-110 sm:h-64"
+                    className="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-110 sm:h-56"
                     priority={project.featured}
                   />
-                  <div className="absolute inset-0 bg-black/60"></div>
-                  <div className="absolute top-4 right-4 flex gap-2">
+
+                  {/* Link Icons */}
+                  <div className="absolute top-3 right-3 flex gap-2 sm:top-4 sm:right-4">
                     <a
                       href={project.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-10 h-10 glass rounded-full flex items-center justify-center hover:neon-glow transition-all duration-300"
+                      className="glass flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 hover:neon-glow sm:h-10 sm:w-10"
                     >
-                      <Github className="w-5 h-5 text-white" />
+                      <Github className="h-4 w-4 text-white sm:h-5 sm:w-5" />
                     </a>
                     <a
                       href={project.live}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-10 h-10 glass rounded-full flex items-center justify-center hover:neon-glow transition-all duration-300"
+                      className="glass flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 hover:neon-glow sm:h-10 sm:w-10"
                     >
-                      <ExternalLink className="w-5 h-5 text-white" />
+                      <ExternalLink className="h-4 w-4 text-white sm:h-5 sm:w-5" />
                     </a>
+                  </div>
+
+                  {/* Text Overlay */}
+                  <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/60 to-transparent p-4 sm:p-6">
+                    <h3 className="mb-2 text-lg font-semibold text-white md:text-xl">
+                      {project.title}
+                    </h3>
+                    <p className="text-sm leading-relaxed text-light-slate">
+                      {project.description}
+                    </p>
                   </div>
                 </div>
 
-                <div className="p-6 md:p-8">
-                  <h3 className="mb-4 text-xl font-semibold text-white md:text-2xl">
-                    {project.title}
-                  </h3>
-                  <p className="mb-6 leading-relaxed text-light-slate">
-                    {project.description}
-                  </p>
-
+                <div className="p-4 sm:p-6">
                   <div className="flex flex-wrap gap-2">
                     {project.tech.map((tech) => (
                       <span
                         key={tech}
-                        className="px-3 py-1 bg-muted rounded-full text-sm text-primary border border-primary/20"
+                        className="rounded-full border border-primary/20 bg-muted px-2.5 py-1 text-xs text-primary/80 sm:px-3 sm:py-1.5 sm:text-sm"
                       >
                         {tech}
                       </span>
@@ -138,11 +142,11 @@ export function ProjectsSection() {
             ))}
         </div>
 
-        <div className="text-center mt-12">
+        <div className="mt-8 text-center md:mt-12">
           <Button
             size="lg"
             variant="outline"
-            className="border-primary text-primary hover:bg-primary/10 px-8 py-4"
+            className="border-primary px-6 py-3 text-base text-primary hover:bg-primary/10 sm:px-8 sm:py-4"
             asChild
           >
             <a
@@ -150,7 +154,7 @@ export function ProjectsSection() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Github className="w-5 h-5 mr-2" />
+              <Github className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
               View All Projects on GitHub
             </a>
           </Button>

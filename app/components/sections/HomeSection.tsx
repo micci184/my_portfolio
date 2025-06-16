@@ -51,35 +51,35 @@ export default function HomeSection() {
   };
 
   return (
-    <div className="flex h-full items-center justify-center px-4">
-      <div className="mx-auto max-w-4xl space-y-8 text-center">
-        <div className="space-y-6">
+    <div className="flex h-full w-full items-center justify-center p-4">
+      <div className="mx-auto w-full max-w-4xl space-y-6 text-center md:space-y-8">
+        <div className="space-y-4 md:space-y-6">
           <div className="inline-block">
-            <div className="glass px-6 py-3 rounded-full neon-glow">
-              <span className="text-primary font-mono text-sm">
+            <div className="glass rounded-full px-4 py-2 neon-glow sm:px-6 sm:py-3">
+              <span className="font-mono text-xs text-primary sm:text-sm">
                 ● Available for hire
               </span>
             </div>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-2 md:space-y-4">
             <h1 className="font-heading text-primary">micci184</h1>
-            <h2 className="text-3xl font-bold text-white sm:text-4xl md:text-6xl">
+            <h2 className="text-3xl font-bold sm:text-4xl md:text-5xl lg:text-6xl">
               Full Stack Engineer
             </h2>
             <h3 className="text-xl font-semibold text-slate sm:text-2xl md:text-3xl">
               & Cloud Architect
             </h3>
-            <p className="mx-auto max-w-2xl text-lg text-slate md:text-xl">
+            <p className="mx-auto max-w-2xl text-base text-slate md:text-lg">
               Building scalable cloud solutions with cutting-edge technologies
             </p>
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
+        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Button
             size="lg"
-            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg neon-glow"
+            className="w-full bg-primary px-6 py-3 text-base text-primary-foreground hover:bg-primary/90 neon-glow sm:w-auto sm:px-8 sm:py-4 sm:text-lg"
             onClick={() => handleSectionChange("projects")}
           >
             <Play className="mr-2 h-5 w-5" />
@@ -88,7 +88,7 @@ export default function HomeSection() {
           <Button
             size="lg"
             variant="outline"
-            className="border-primary text-primary hover:bg-primary/10 px-8 py-4 text-lg"
+            className="w-full border-primary px-6 py-3 text-base text-primary hover:bg-primary/10 sm:w-auto sm:px-8 sm:py-4 sm:text-lg"
             onClick={() => handleSectionChange("contact")}
           >
             <Mail className="mr-2 h-5 w-5" />
@@ -96,7 +96,7 @@ export default function HomeSection() {
           </Button>
         </div>
 
-        <div className="glass terminal mx-auto mt-12 max-w-3xl">
+        <div className="glass terminal mx-auto mt-8 max-w-3xl md:mt-12">
           <div className="terminal-header">
             <div className="terminal-dot red"></div>
             <div className="terminal-dot yellow"></div>

@@ -39,7 +39,7 @@ export default function Content({ activeSection }: ContentProps) {
       className="h-screen overflow-y-scroll snap-y snap-mandatory"
     >
       {sections.map(({ id, component: Component }) => (
-        <section key={id} id={id} className="h-screen snap-center">
+        <section key={id} id={id} className="h-screen snap-center pt-24">
           <Component />
         </section>
       ))}

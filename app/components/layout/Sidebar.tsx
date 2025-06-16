@@ -39,6 +39,9 @@ interface SocialItem {
 interface SidebarProps {
   activeSection: SectionId;
   setActiveSection: (section: SectionId) => void;
+  isCollapsed: boolean;
+  setIsCollapsed: (isCollapsed: boolean) => void;
+  isMobile: boolean;
 }
 
 interface NavItemProps {
@@ -51,21 +54,10 @@ interface NavItemProps {
 export default function Sidebar({
   activeSection,
   setActiveSection,
+  isCollapsed,
+  setIsCollapsed,
+  isMobile,
 }: SidebarProps) {
-  const [isCollapsed, setIsCollapsed] = React.useState(true);
-  const [isMobile, setIsMobile] = React.useState(false);
-
-  React.useEffect(() => {
-    const checkScreenSize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkScreenSize();
-    window.addEventListener("resize", checkScreenSize);
-    return () => window.removeEventListener("resize", checkScreenSize);
-  }, []);
-
-  const collapsed = !isMobile && isCollapsed;
-
   const navItems: NavItemData[] = [
     { id: "home", label: "Home", icon: Home },
     { id: "about", label: "About", icon: User },
@@ -89,15 +81,11 @@ export default function Sidebar({
     },
   ];
 
-  const handleSectionChange = (section: SectionId) => {
-    setActiveSection(section);
-  };
-
   return (
     <aside
       className={cn(
         "relative flex h-screen flex-col border-r bg-card transition-all duration-300 ease-in-out",
-        collapsed ? "w-20" : "w-64"
+        isCollapsed ? "w-20" : "w-64"
       )}
     >
       <div className="flex flex-1 flex-col gap-y-4 overflow-y-auto p-4">
@@ -107,8 +95,8 @@ export default function Sidebar({
               key={item.id}
               item={item}
               activeSection={activeSection}
-              isCollapsed={collapsed}
-              onClick={() => handleSectionChange(item.id)}
+              isCollapsed={isCollapsed}
+              onClick={() => setActiveSection(item.id)}
             />
           ))}
         </nav>
@@ -118,11 +106,11 @@ export default function Sidebar({
         <div
           className={cn(
             "flex items-center justify-center",
-            collapsed ? "flex-col gap-y-4" : "gap-x-4"
+            isCollapsed ? "flex-col gap-y-4" : "gap-x-4"
           )}
         >
           {socialItems.map((item) => (
-            <SocialItem key={item.name} item={item} isCollapsed={collapsed} />
+            <SocialItem key={item.name} item={item} isCollapsed={isCollapsed} />
           ))}
         </div>
         {!isMobile && (
