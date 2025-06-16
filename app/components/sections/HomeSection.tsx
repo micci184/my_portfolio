@@ -67,10 +67,10 @@ export default function HomeSection() {
             <h2 className="text-3xl font-bold sm:text-4xl md:text-5xl lg:text-6xl">
               Full Stack Engineer
             </h2>
-            <h3 className="text-xl font-semibold text-slate sm:text-2xl md:text-3xl">
+            <h3 className="text-xl font-semibold text-muted-foreground sm:text-2xl md:text-3xl">
               & Cloud Architect
             </h3>
-            <p className="mx-auto max-w-2xl text-base text-slate md:text-lg">
+            <p className="mx-auto max-w-2xl text-base text-muted-foreground md:text-lg">
               Building scalable cloud solutions with cutting-edge technologies
             </p>
           </div>
@@ -105,7 +105,7 @@ export default function HomeSection() {
               micci184@cloud-workstation
             </span>
           </div>
-          <div className="space-y-2 text-left">
+          <div className="p-4 space-y-2 text-left">
             {terminalLines.map((line, index) => (
               <div key={index} className="text-xs sm:text-sm">
                 {line.startsWith("$") ? (
