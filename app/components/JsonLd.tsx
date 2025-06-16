@@ -1,23 +1,15 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import Script from "next/script";
 
 interface JsonLdProps {
   data: Record<string, any>;
 }
 
 export default function JsonLd({ data }: JsonLdProps) {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) return null;
-
   return (
-    <script
+    <Script
+      id={`json-ld-${Math.random().toString(36).substring(7)}`}
       type="application/ld+json"
+      strategy="beforeInteractive"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
     />
   );
