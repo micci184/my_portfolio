@@ -1,14 +1,15 @@
-import "@styles/globals.css";
+import { ThemeProvider } from "next-themes";
+import "@/app/styles/globals.css";
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
-import { ThemeProvider } from "@components/theme-provider";
+import { Inter as FontSans, JetBrains_Mono } from "next/font/google";
+import { cn } from "@/lib/utils";
 
-const inter = Inter({
+const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
-const jetBrainsMono = JetBrains_Mono({
+const fontMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
 });
@@ -25,12 +26,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="ja"
-      className={`${inter.variable} ${jetBrainsMono.variable}`}
-      suppressHydrationWarning
-    >
-      <body className="bg-background text-foreground min-h-screen">
+    <html lang="ja" suppressHydrationWarning>
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable,
+          fontMono.variable
+        )}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

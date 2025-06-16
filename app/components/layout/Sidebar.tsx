@@ -14,15 +14,15 @@ import {
   PanelLeftClose,
   PanelRightClose,
 } from "lucide-react";
-import { SectionId } from "@/components/layout/Portfolio";
+import { SectionId } from "@/app/components/layout/Portfolio";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@components/ui/tooltip";
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Button } from "@components/ui/button";
+import { Button } from "@/components/ui/button";
 
 interface NavItemData {
   id: SectionId;
@@ -39,6 +39,9 @@ interface SocialItem {
 interface SidebarProps {
   activeSection: SectionId;
   setActiveSection: (section: SectionId) => void;
+  isCollapsed: boolean;
+  setIsCollapsed: (isCollapsed: boolean) => void;
+  isMobile: boolean;
 }
 
 interface NavItemProps {
@@ -51,9 +54,10 @@ interface NavItemProps {
 export default function Sidebar({
   activeSection,
   setActiveSection,
+  isCollapsed,
+  setIsCollapsed,
+  isMobile,
 }: SidebarProps) {
-  const [isCollapsed, setIsCollapsed] = React.useState(true);
-
   const navItems: NavItemData[] = [
     { id: "home", label: "Home", icon: Home },
     { id: "about", label: "About", icon: User },
@@ -77,10 +81,6 @@ export default function Sidebar({
     },
   ];
 
-  const handleSectionChange = (section: SectionId) => {
-    setActiveSection(section);
-  };
-
   return (
     <aside
       className={cn(
@@ -96,7 +96,7 @@ export default function Sidebar({
               item={item}
               activeSection={activeSection}
               isCollapsed={isCollapsed}
-              onClick={() => handleSectionChange(item.id)}
+              onClick={() => setActiveSection(item.id)}
             />
           ))}
         </nav>
@@ -113,15 +113,17 @@ export default function Sidebar({
             <SocialItem key={item.name} item={item} isCollapsed={isCollapsed} />
           ))}
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-10 w-10"
-          onClick={() => setIsCollapsed(!isCollapsed)}
-        >
-          {isCollapsed ? <PanelRightClose /> : <PanelLeftClose />}
-          <span className="sr-only">Toggle sidebar</span>
-        </Button>
+        {!isMobile && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10"
+            onClick={() => setIsCollapsed(!isCollapsed)}
+          >
+            {isCollapsed ? <PanelRightClose /> : <PanelLeftClose />}
+            <span className="sr-only">Toggle sidebar</span>
+          </Button>
+        )}
       </div>
     </aside>
   );
