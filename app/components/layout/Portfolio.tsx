@@ -6,7 +6,7 @@ import Content from "@/app/components/layout/Content";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
-import { cn } from "@/app/lib/utils";
+import { cn } from "@/lib/utils";
 
 export type SectionId =
   | "home"
