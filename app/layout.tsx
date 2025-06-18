@@ -1,6 +1,6 @@
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter as FontSans, JetBrains_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
 
@@ -16,6 +16,15 @@ const fontMono = JetBrains_Mono({
 
 // 環境変数またはデフォルト値からサイトURLを取得
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://micci184.dev";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f172a" },
+  ],
+};
 
 export const metadata: Metadata = {
   title: "micci184 - Full Stack Engineer & Cloud Architect",
@@ -63,12 +72,6 @@ export const metadata: Metadata = {
     site: "@micci184", // サイト運営用アカウント
     images: [`${siteUrl}/images/og-image.png`],
   },
-  // Next.js公式ドキュメントに準拠した文字列形式
-  viewport: "width=device-width, initial-scale=1",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0f172a" },
-  ],
 };
 
 export default function RootLayout({
