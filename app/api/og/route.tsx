@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 
-export const runtime = "nodejs";
+export const runtime = "edge";
 
 export async function GET(request: NextRequest) {
   try {
@@ -32,10 +32,21 @@ export async function GET(request: NextRequest) {
       {
         width: 1200,
         height: 630,
+        fonts: [
+          {
+            name: "Inter",
+            data: await fetch(
+              new URL("../../assets/fonts/Inter-Bold.ttf", import.meta.url)
+            ).then((res) => res.arrayBuffer()),
+            weight: 700,
+            style: "normal",
+          },
+        ],
       }
     );
   } catch (e) {
-    console.log(`Error generating OG image: ${e}`);
-    return new Response("Failed to generate OG image", { status: 500 });
+    return new Response(`Failed to generate OG image: ${e}`, {
+      status: 500,
+    });
   }
 }
