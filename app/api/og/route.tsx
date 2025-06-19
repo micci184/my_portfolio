@@ -1,8 +1,10 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 
-export const runtime = "edge";
+// OGイメージ生成をキャッシュするように設定
 export const dynamic = "force-static";
+// Edgeランタイムは使用しない（force-staticと競合するため）
+// export const runtime = "edge";
 
 export async function GET(request: NextRequest) {
   try {

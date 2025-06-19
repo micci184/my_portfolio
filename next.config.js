@@ -15,16 +15,15 @@ const nextConfig = {
   bundlePagesRouterDependencies: true,
   // バンドルから除外する特定のパッケージ
   serverExternalPackages: [],
-  // Next.js 15のクライアント側ルーターキャッシュの設定
+  // Next.js 15の設定
   experimental: {
+    // クライアント側ルーターキャッシュの設定
     staleTimes: {
       dynamic: 30, // 動的ルートのキャッシュ時間（秒）
       static: 180, // 静的ルートのキャッシュ時間（秒）
     },
     // PPRはcanaryバージョンでのみ使用可能なため無効化
     // ppr: 'incremental',
-    // next/after APIを有効化
-    after: true,
   },
 };
 
