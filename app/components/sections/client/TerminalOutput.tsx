@@ -67,17 +67,15 @@ export default function TerminalOutput({
         delay = 800; // 長い出力は長め
       }
 
-      const cumulativeDelay = lines
-        .slice(0, index)
-        .reduce((acc, prevLine) => {
-          let prevDelay = 700;
-          if (prevLine.startsWith("$")) {
-            prevDelay = 500;
-          } else if (prevLine.length > 40) {
-            prevDelay = 800;
-          }
-          return acc + prevDelay;
-        }, 0);
+      const cumulativeDelay = lines.slice(0, index).reduce((acc, prevLine) => {
+        let prevDelay = 700;
+        if (prevLine.startsWith("$")) {
+          prevDelay = 500;
+        } else if (prevLine.length > 40) {
+          prevDelay = 800;
+        }
+        return acc + prevDelay;
+      }, 0);
 
       const id = setTimeout(() => {
         setTerminalLines((prev) => [...prev, line]);
@@ -120,16 +118,6 @@ export default function TerminalOutput({
           <button
             onClick={handleSkip}
             className="ml-auto mr-2 px-2 py-1 text-xs text-gray-400 hover:text-gray-200 transition-colors"
-          >
-            Skip
-          </button>
-        )}
-      </div>
-        </span>
-        {!isComplete && (
-          <button
-            onClick={() => setSkipAnimation(true)}
-            className="ml-auto text-xs text-gray-400 hover:text-gray-200"
           >
             Skip
           </button>

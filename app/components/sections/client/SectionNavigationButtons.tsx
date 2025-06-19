@@ -13,23 +13,15 @@ export default function SectionNavigationButtons({
 }: SectionNavigationButtonsProps) {
   // セクション変更のためのハンドラ関数
   const handleSectionChange = (section: SectionId) => {
-    try {
-      const portfolioElement = document.getElementById("portfolio");
-      if (portfolioElement) {
+    const portfolioElement = document.getElementById("portfolio");
+    if (portfolioElement) {
+      try {
         const event = new CustomEvent("changeSection", {
           detail: { section },
         });
         portfolioElement.dispatchEvent(event);
-      } else {
-        console.warn("Portfolio element not found for section navigation");
-      }
-      onSectionChange(section);
-    } catch (error) {
-      console.error("Error during section navigation:", error);
-      // フォールバック：直接コールバックを実行
-      onSectionChange(section);
-    }
-  };
+      } catch (error) {
+        console.warn("Failed to dispatch section change event:", error);
       }
       onSectionChange(section);
     } catch (error) {
