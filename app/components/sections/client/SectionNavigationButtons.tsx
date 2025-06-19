@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Play, Mail } from "lucide-react";
-import { SectionId } from "@/components/layout/Portfolio";
+import { SectionId } from "app/components/layout/Portfolio";
 
 interface SectionNavigationButtonsProps {
   onSectionChange: (section: SectionId) => void;
