@@ -10,6 +10,13 @@ const nextConfig = {
       },
     ],
   },
+  // Next.js 15のクライアント側ルーターキャッシュの設定
+  experimental: {
+    staleTimes: {
+      dynamic: 30, // 動的ルートのキャッシュ時間（秒）
+      static: 180, // 静的ルートのキャッシュ時間（秒）
+    },
+  },
 };
 
 module.exports = nextConfig;

@@ -2,6 +2,7 @@ import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 
 export const runtime = "edge";
+export const dynamic = "force-static";
 
 export async function GET(request: NextRequest) {
   try {
@@ -36,7 +37,8 @@ export async function GET(request: NextRequest) {
           {
             name: "Inter",
             data: await fetch(
-              new URL("../../assets/fonts/Inter-Bold.ttf", import.meta.url)
+              new URL("../../assets/fonts/Inter-Bold.ttf", import.meta.url),
+              { cache: "force-cache" }
             ).then((res) => res.arrayBuffer()),
             weight: 700,
             style: "normal",
