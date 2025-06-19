@@ -12,8 +12,6 @@ const nextConfig = {
     ],
     // 画像最適化の詳細設定
     formats: ["image/avif", "image/webp"],
-    // デフォルトの画質設定（75%が最適なバランス）
-    quality: 75,
     // キャッシュ期間を1年に設定（31536000秒）
     minimumCacheTTL: 31536000,
     // 画像サイズのプリセット（よく使用されるサイズ）
@@ -40,12 +38,10 @@ const nextConfig = {
     },
     // キャッシュ最適化
     optimizeServerReact: true,
-    // 静的ページの生成最適化
+    // CSSの最適化（インライン化）
     optimizeCss: true,
     // サーバーコンポーネントの最適化
     serverMinification: true,
-    // 画像最適化
-    optimizeImages: true,
   },
 };
 
