@@ -1,6 +1,9 @@
 import Portfolio from "@/app/components/layout/Portfolio";
 import JsonLd from "@/app/components/JsonLd";
 
+// PPRを有効にする
+export const experimental_ppr = true;
+
 // 構造化データを定数としてコンポーネント外で定義
 // 不変データなので再レンダリング時に再生成されない
 const personSchema = {
