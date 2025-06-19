@@ -13,15 +13,23 @@ export default function SectionNavigationButtons({
 }: SectionNavigationButtonsProps) {
   // セクション変更のためのハンドラ関数
   const handleSectionChange = (section: SectionId) => {
-    const portfolioElement = document.getElementById("portfolio");
-    if (portfolioElement) {
-      try {
+    try {
+      const portfolioElement = document.getElementById("portfolio");
+      if (portfolioElement) {
         const event = new CustomEvent("changeSection", {
           detail: { section },
         });
         portfolioElement.dispatchEvent(event);
-      } catch (error) {
-        console.warn("Failed to dispatch section change event:", error);
+      } else {
+        console.warn("Portfolio element not found for section navigation");
+      }
+      onSectionChange(section);
+    } catch (error) {
+      console.error("Error during section navigation:", error);
+      // フォールバック：直接コールバックを実行
+      onSectionChange(section);
+    }
+  };
       }
     }
     onSectionChange(section);

@@ -10,10 +10,34 @@ export default function TerminalOutput({
   initialLines = [],
 }: TerminalOutputProps) {
   const [terminalLines, setTerminalLines] = useState<string[]>(initialLines);
-  const [isComplete, setIsComplete] = useState(false);
-  const [skipAnimation, setSkipAnimation] = useState(false);
+  const [isAnimationComplete, setIsAnimationComplete] = useState(false);
+  const [isSkipped, setIsSkipped] = useState(false);
 
   useEffect(() => {
+    if (isSkipped) {
+      // スキップされた場合、すべての行を即座に表示
+      const lines = [
+        "$ whoami",
+        "micci184 - Full Stack Engineer & Cloud Architect",
+        "$ cat skills.txt",
+        "JavaScript, TypeScript, React, Node.js, AWS, GCP...",
+        "$ aws sts get-caller-identity",
+        "Account: ************ | Role: CloudArchitect",
+        "$ kubectl get nodes",
+        "Ready    3 nodes running in production",
+        "$ terraform --version",
+        "Terraform v1.6.0 on linux_amd64",
+        "$ ls projects/",
+        "3d-game-engine/ ai-assistant/ cloud-infrastructure/",
+        "$ echo 'Ready to build scalable cloud solutions!'",
+        "Ready to build scalable cloud solutions!",
+        "$",
+      ];
+      setTerminalLines((prev) => [...prev, ...lines]);
+      setIsAnimationComplete(true);
+      return;
+    }
+
     // Simulate terminal loading with cloud focus
     const lines = [
       "$ whoami",
@@ -33,42 +57,43 @@ export default function TerminalOutput({
       "$",
     ];
 
-    // コマンドとその結果に応じた可変間隔を設定
-    const getDelay = (line: string, index: number): number => {
-      // コマンド入力は短く
-      if (line.startsWith("$")) return 500;
-      // 長い出力は少し長く
-      if (line.length > 40) return 800;
-      // 標準的な出力
-      return 700;
-    };
-
-    if (skipAnimation) {
-      // アニメーションをスキップして全ての行を表示
-      setTerminalLines(lines);
-      setIsComplete(true);
-      return;
-    }
-
     const tids: NodeJS.Timeout[] = [];
-    let cumulativeDelay = 0;
-
     lines.forEach((line, index) => {
-      const delay = getDelay(line, index);
-      cumulativeDelay += delay;
+      // コンテンツに応じた可変間隔
+      let delay = 700; // デフォルト
+      if (line.startsWith("$")) {
+        delay = 500; // コマンド入力は短め
+      } else if (line.length > 40) {
+        delay = 800; // 長い出力は長め
+      }
+
+      const cumulativeDelay = lines
+        .slice(0, index)
+        .reduce((acc, prevLine) => {
+          let prevDelay = 700;
+          if (prevLine.startsWith("$")) {
+            prevDelay = 500;
+          } else if (prevLine.length > 40) {
+            prevDelay = 800;
+          }
+          return acc + prevDelay;
+        }, 0);
 
       const id = setTimeout(() => {
         setTerminalLines((prev) => [...prev, line]);
-        // 最後の行が表示されたらアニメーション完了フラグを設定
         if (index === lines.length - 1) {
-          setIsComplete(true);
+          setIsAnimationComplete(true);
         }
       }, cumulativeDelay);
       tids.push(id);
     });
 
     return () => tids.forEach(clearTimeout);
-  }, [skipAnimation]);
+  }, [isSkipped]);
+
+  const handleSkip = () => {
+    setIsSkipped(true);
+  };
 
   return (
     <div className="terminal mx-auto mt-8 max-w-3xl md:mt-12">
@@ -78,6 +103,16 @@ export default function TerminalOutput({
         <div className="terminal-dot green"></div>
         <span className="text-gray-400 text-sm ml-4">
           micci184@cloud-workstation
+        </span>
+        {!isAnimationComplete && !isSkipped && (
+          <button
+            onClick={handleSkip}
+            className="ml-auto mr-2 px-2 py-1 text-xs text-gray-400 hover:text-gray-200 transition-colors"
+          >
+            Skip
+          </button>
+        )}
+      </div>
         </span>
         {!isComplete && (
           <button
