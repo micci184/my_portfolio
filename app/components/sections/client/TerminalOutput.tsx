@@ -57,7 +57,7 @@ export default function TerminalOutput({
       "$",
     ];
 
-    const tids: NodeJS.Timeout[] = [];
+    const tids: ReturnType<typeof setTimeout>[] = [];
     lines.forEach((line, index) => {
       // コンテンツに応じた可変間隔
       let delay = 700; // デフォルト
@@ -67,33 +67,17 @@ export default function TerminalOutput({
         delay = 800; // 長い出力は長め
       }
 
-      const cumulativeDelay = lines
-        .slice(0, index)
-        .reduce((acc, prevLine) => {
-          let prevDelay = 700;
-          if (prevLine.startsWith("$")) {
-            prevDelay = 500;
-          } else if (prevLine.length > 40) {
-            prevDelay = 800;
-          }
-          return acc + prevDelay;
-        }, 0);
+      const cumulativeDelay = lines.slice(0, index).reduce((acc, prevLine) => {
+        let prevDelay = 700;
+        if (prevLine.startsWith("$")) {
+          prevDelay = 500;
+        } else if (prevLine.length > 40) {
+          prevDelay = 800;
+        }
+        return acc + prevDelay;
+      }, 0);
 
       const id = setTimeout(() => {
-        setTerminalLines((prev) => [...prev, line]);
-        if (index === lines.length - 1) {
-          setIsAnimationComplete(true);
-        }
-      }, cumulativeDelay);
-      tids.push(id);
-    });
-
-    return () => tids.forEach(clearTimeout);
-  }, [isSkipped]);
-
-  const handleSkip = () => {
-    setIsSkipped(true);
-  };
         setTerminalLines((prev) => [...prev, line]);
         if (index === lines.length - 1) {
           setIsAnimationComplete(true);
