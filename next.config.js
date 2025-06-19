@@ -21,8 +21,8 @@ const nextConfig = {
       dynamic: 30, // 動的ルートのキャッシュ時間（秒）
       static: 180, // 静的ルートのキャッシュ時間（秒）
     },
-    // Partial Prerendering (PPR)を段階的に導入
-    ppr: "incremental",
+    // PPRはcanaryバージョンでのみ使用可能なため無効化
+    // ppr: 'incremental',
     // next/after APIを有効化
     after: true,
   },
