@@ -15,10 +15,14 @@ export default function SectionNavigationButtons({
   const handleSectionChange = (section: SectionId) => {
     const portfolioElement = document.getElementById("portfolio");
     if (portfolioElement) {
-      const event = new CustomEvent("changeSection", {
-        detail: { section },
-      });
-      portfolioElement.dispatchEvent(event);
+      try {
+        const event = new CustomEvent("changeSection", {
+          detail: { section },
+        });
+        portfolioElement.dispatchEvent(event);
+      } catch (error) {
+        console.warn("Failed to dispatch section change event:", error);
+      }
     }
     onSectionChange(section);
   };
