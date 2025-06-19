@@ -23,6 +23,14 @@ export default function SectionNavigationButtons({
       } else {
         console.warn("Portfolio element not found for section navigation");
       }
+      onSectionChange(section);
+    } catch (error) {
+      console.error("Error during section navigation:", error);
+      // フォールバック：直接コールバックを実行
+      onSectionChange(section);
+    }
+  };
+      }
       // 正常時：イベント後にコールバック実行
       onSectionChange(section);
     } catch (error) {
