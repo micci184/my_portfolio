@@ -39,7 +39,12 @@ const nextConfig = {
     // キャッシュ最適化
     optimizeServerReact: true,
     // CSSの最適化（インライン化）
-    optimizeCss: true,
+    optimizeCss: {
+      // crittersを使用してCSSをインライン化
+      inlineImportedCss: true,
+      // crittersの設定
+      prune: true,
+    },
     // サーバーコンポーネントの最適化
     serverMinification: true,
   },
