@@ -6,7 +6,14 @@ interface TerminalOutputProps {
   initialLines?: string[];
 }
 
-useEffect(() => {
+export default function TerminalOutput({
+  initialLines = [],
+}: TerminalOutputProps) {
+  const [terminalLines, setTerminalLines] = useState<string[]>(initialLines);
+  const [isAnimationComplete, setIsAnimationComplete] = useState(false);
+  const [isSkipped, setIsSkipped] = useState(false);
+
+  useEffect(() => {
     if (isSkipped) {
       // スキップされた場合、すべての行を即座に表示
       const lines = [
@@ -50,7 +57,7 @@ useEffect(() => {
       "$",
     ];
 
-    const tids: NodeJS.Timeout[] = [];
+    const tids: ReturnType<typeof setTimeout>[] = [];
     lines.forEach((line, index) => {
       // コンテンツに応じた可変間隔
       let delay = 700; // デフォルト
@@ -60,29 +67,21 @@ useEffect(() => {
         delay = 800; // 長い出力は長め
       }
 
-      const cumulativeDelay = lines
-        .slice(0, index)
-        .reduce((acc, prevLine) => {
-          let prevDelay = 700;
-          if (prevLine.startsWith("$")) {
-            prevDelay = 500;
-          } else if (prevLine.length > 40) {
-            prevDelay = 800;
-          }
-          return acc + prevDelay;
-        }, 0);
+      const cumulativeDelay = lines.slice(0, index).reduce((acc, prevLine) => {
+        let prevDelay = 700;
+        if (prevLine.startsWith("$")) {
+          prevDelay = 500;
+        } else if (prevLine.length > 40) {
+          prevDelay = 800;
+        }
+        return acc + prevDelay;
+      }, 0);
 
       const id = setTimeout(() => {
         setTerminalLines((prev) => [...prev, line]);
         if (index === lines.length - 1) {
           setIsAnimationComplete(true);
         }
-      }, cumulativeDelay);
-      tids.push(id);
-    });
-
-    return () => tids.forEach(clearTimeout);
-  }, [isSkipped]);
       }, cumulativeDelay);
       tids.push(id);
     });
