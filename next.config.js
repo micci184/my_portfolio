@@ -10,6 +10,11 @@ const nextConfig = {
       },
     ],
   },
+  // 外部パッケージのバンドリングを最適化
+  // Pagesルーターでも自動的に外部パッケージをバンドルする
+  bundlePagesRouterDependencies: true,
+  // バンドルから除外する特定のパッケージ
+  serverExternalPackages: [],
   // Next.js 15のクライアント側ルーターキャッシュの設定
   experimental: {
     staleTimes: {
@@ -18,6 +23,8 @@ const nextConfig = {
     },
     // Partial Prerendering (PPR)を段階的に導入
     ppr: "incremental",
+    // next/after APIを有効化
+    after: true,
   },
 };
 
