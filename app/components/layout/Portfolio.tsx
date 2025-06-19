@@ -50,7 +50,7 @@ export default function Portfolio() {
   };
 
   return (
-    <div className="flex bg-background text-foreground">
+    <div id="portfolio" className="flex bg-background text-foreground">
       {/* Desktop Sidebar */}
       <div className="hidden md:block">
         <Sidebar {...sidebarProps} isCollapsed={isSidebarCollapsed} />

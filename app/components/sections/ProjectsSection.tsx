@@ -1,75 +1,12 @@
 import { Github, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { projects } from "@/app/data/projects";
 
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  tech: string[];
-  github: string;
-  live: string;
-  image: string;
-  featured: boolean;
-}
+// クライアントコンポーネントのインタラクティブな部分を分離するためのコンポーネント
+import ProjectLinks from "./client/ProjectLinks";
 
 export function ProjectsSection() {
-  const projects: Project[] = [
-    {
-      id: 1,
-      title: "Cloud-Native E-commerce Platform",
-      description:
-        "Scalable microservices architecture deployed on AWS with auto-scaling, load balancing, and multi-region deployment. Handles 100K+ concurrent users with 99.9% uptime.",
-      tech: [
-        "AWS",
-        "Kubernetes",
-        "Docker",
-        "React",
-        "Node.js",
-        "PostgreSQL",
-        "Redis",
-        "Terraform",
-      ],
-      github: "https://github.com/micci184/ecommerce-platform",
-      live: "https://ecommerce-platform.vercel.app",
-      image:
-        "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop",
-      featured: true,
-    },
-    {
-      id: 2,
-      title: "AI-Powered Analytics Dashboard",
-      description:
-        "Real-time analytics platform using Google Cloud ML APIs, BigQuery for data processing, and React for visualization. Processes 1M+ events daily with machine learning insights.",
-      tech: [
-        "Google Cloud",
-        "BigQuery",
-        "Cloud Functions",
-        "React",
-        "Python",
-        "TensorFlow",
-        "Docker",
-      ],
-      github: "https://github.com/micci184/analytics-dashboard",
-      live: "https://analytics-dashboard.com",
-      image:
-        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop",
-      featured: true,
-    },
-    {
-      id: 3,
-      title: "Infrastructure as Code Template",
-      description:
-        "Complete Terraform modules for AWS infrastructure deployment. Includes VPC setup, EKS cluster, RDS, monitoring, and security configurations with best practices.",
-      tech: ["Terraform", "AWS", "Kubernetes", "Helm", "Prometheus", "Grafana"],
-      github: "https://github.com/micci184/aws-terraform-modules",
-      live: "https://terraform-modules.micci184.dev",
-      image:
-        "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop",
-      featured: false,
-    },
-  ];
-
   return (
     <div className="flex h-full w-full items-center justify-center p-4 sm:p-6 md:p-8">
       <div className="mx-auto w-full max-w-7xl space-y-8">
@@ -93,27 +30,11 @@ export function ProjectsSection() {
                     height={400}
                     className="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-110 sm:h-56"
                     priority={project.featured}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
                   />
 
-                  {/* Link Icons */}
-                  <div className="absolute top-3 right-3 flex gap-2 sm:top-4 sm:right-4">
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="glass flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 hover:neon-glow sm:h-10 sm:w-10"
-                    >
-                      <Github className="h-4 w-4 text-white sm:h-5 sm:w-5" />
-                    </a>
-                    <a
-                      href={project.live}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="glass flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 hover:neon-glow sm:h-10 sm:w-10"
-                    >
-                      <ExternalLink className="h-4 w-4 text-white sm:h-5 sm:w-5" />
-                    </a>
-                  </div>
+                  {/* Link Icons - クライアントコンポーネントに分離 */}
+                  <ProjectLinks github={project.github} live={project.live} />
 
                   {/* Text Overlay */}
                   <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/60 to-transparent p-4 sm:p-6">

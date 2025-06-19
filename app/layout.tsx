@@ -4,14 +4,23 @@ import type { Metadata, Viewport } from "next";
 import { Inter as FontSans, JetBrains_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
 
+// フォント読み込みの最適化
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap", // テキストの早期表示のためにswapを使用
+  preload: true,
+  fallback: ["system-ui", "sans-serif"], // フォールバックフォントを明示的に指定
+  adjustFontFallback: true, // フォントフォールバックの自動調整
 });
 
 const fontMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
+  display: "swap",
+  preload: true,
+  fallback: ["monospace"],
+  adjustFontFallback: true,
 });
 
 // 環境変数またはデフォルト値からサイトURLを取得
@@ -81,6 +90,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja" suppressHydrationWarning>
+      <head>
+        {/* プリロードの最適化 */}
+        <link
+          rel="preload"
+          href="/images/og-image.png"
+          as="image"
+          type="image/png"
+        />
+      </head>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
