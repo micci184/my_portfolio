@@ -31,6 +31,14 @@ export default function SectionNavigationButtons({
     }
   };
       }
+      onSectionChange(section);
+    } catch (error) {
+      console.error("Error during section navigation:", error);
+      // フォールバック：直接コールバックを実行
+      onSectionChange(section);
+    }
+  };
+      }
     }
     onSectionChange(section);
   };

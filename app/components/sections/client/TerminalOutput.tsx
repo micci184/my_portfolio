@@ -91,6 +91,18 @@ export default function TerminalOutput({
     return () => tids.forEach(clearTimeout);
   }, [isSkipped]);
 
+      const id = setTimeout(() => {
+        setTerminalLines((prev) => [...prev, line]);
+        if (index === lines.length - 1) {
+          setIsAnimationComplete(true);
+        }
+      }, cumulativeDelay);
+      tids.push(id);
+    });
+
+    return () => tids.forEach(clearTimeout);
+  }, [isSkipped]);
+
   const handleSkip = () => {
     setIsSkipped(true);
   };
