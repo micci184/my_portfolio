@@ -10,6 +10,21 @@ const nextConfig = {
       },
     ],
   },
+  // 外部パッケージのバンドリングを最適化
+  // Pagesルーターでも自動的に外部パッケージをバンドルする
+  bundlePagesRouterDependencies: true,
+  // バンドルから除外する特定のパッケージ
+  serverExternalPackages: [],
+  // Next.js 15の設定
+  experimental: {
+    // クライアント側ルーターキャッシュの設定
+    staleTimes: {
+      dynamic: 30, // 動的ルートのキャッシュ時間（秒）
+      static: 180, // 静的ルートのキャッシュ時間（秒）
+    },
+    // PPRはcanaryバージョンでのみ使用可能なため無効化
+    // ppr: 'incremental',
+  },
 };
 
 module.exports = nextConfig;

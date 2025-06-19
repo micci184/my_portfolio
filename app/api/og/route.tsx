@@ -1,7 +1,10 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 
-export const runtime = "edge";
+// OGイメージ生成をキャッシュするように設定
+export const dynamic = "force-static";
+// Edgeランタイムは使用しない（force-staticと競合するため）
+// export const runtime = "edge";
 
 export async function GET(request: NextRequest) {
   try {
@@ -36,7 +39,8 @@ export async function GET(request: NextRequest) {
           {
             name: "Inter",
             data: await fetch(
-              new URL("../../assets/fonts/Inter-Bold.ttf", import.meta.url)
+              new URL("../../assets/fonts/Inter-Bold.ttf", import.meta.url),
+              { cache: "force-cache" }
             ).then((res) => res.arrayBuffer()),
             weight: 700,
             style: "normal",
