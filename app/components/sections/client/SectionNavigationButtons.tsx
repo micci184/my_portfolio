@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Play, Mail } from "lucide-react";
-import { SectionId } from "../../layout/Portfolio";
+import { SectionId } from "@/components/layout/Portfolio";
 
 interface SectionNavigationButtonsProps {
   onSectionChange: (section: SectionId) => void;
@@ -30,14 +30,6 @@ export default function SectionNavigationButtons({
       // フォールバック：直接コールバックを実行
       onSectionChange(section);
     }
-  };
-      }
-    } catch (error) {
-      console.error("Error during section navigation:", error);
-    }
-
-    // 常にコールバックを実行
-    onSectionChange(section);
   };
 
   return (

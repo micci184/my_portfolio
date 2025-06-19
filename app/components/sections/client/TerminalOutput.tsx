@@ -14,31 +14,7 @@ export default function TerminalOutput({
   const [isSkipped, setIsSkipped] = useState(false);
 
   useEffect(() => {
-    if (isSkipped) {
-      // スキップされた場合、すべての行を即座に表示
-      const lines = [
-        "$ whoami",
-        "micci184 - Full Stack Engineer & Cloud Architect",
-        "$ cat skills.txt",
-        "JavaScript, TypeScript, React, Node.js, AWS, GCP...",
-        "$ aws sts get-caller-identity",
-        "Account: ************ | Role: CloudArchitect",
-        "$ kubectl get nodes",
-        "Ready    3 nodes running in production",
-        "$ terraform --version",
-        "Terraform v1.6.0 on linux_amd64",
-        "$ ls projects/",
-        "3d-game-engine/ ai-assistant/ cloud-infrastructure/",
-        "$ echo 'Ready to build scalable cloud solutions!'",
-        "Ready to build scalable cloud solutions!",
-        "$",
-      ];
-      setTerminalLines((prev) => [...prev, ...lines]);
-      setIsAnimationComplete(true);
-      return;
-    }
-
-    // Simulate terminal loading with cloud focus
+    // ターミナルに表示する行
     const lines = [
       "$ whoami",
       "micci184 - Full Stack Engineer & Cloud Architect",
@@ -57,7 +33,16 @@ export default function TerminalOutput({
       "$",
     ];
 
-    const tids: NodeJS.Timeout[] = [];
+    if (isSkipped) {
+      // スキップされた場合、すべての行を即座に表示
+      setTerminalLines((prev) => [...prev, ...lines]);
+      setIsAnimationComplete(true);
+      return;
+    }
+
+    // アニメーション表示のための処理
+    const tids: ReturnType<typeof setTimeout>[] = [];
+
     lines.forEach((line, index) => {
       // コンテンツに応じた可変間隔
       let delay = 700; // デフォルト
@@ -67,21 +52,30 @@ export default function TerminalOutput({
         delay = 800; // 長い出力は長め
       }
 
-      const cumulativeDelay = lines
-        .slice(0, index)
-        .reduce((acc, prevLine) => {
-          let prevDelay = 700;
-          if (prevLine.startsWith("$")) {
-            prevDelay = 500;
-          } else if (prevLine.length > 40) {
-            prevDelay = 800;
-          }
-          return acc + prevDelay;
-        }, 0);
+      const cumulativeDelay = lines.slice(0, index).reduce((acc, prevLine) => {
+        let prevDelay = 700;
+        if (prevLine.startsWith("$")) {
+          prevDelay = 500;
+        } else if (prevLine.length > 40) {
+          prevDelay = 800;
+        }
+        return acc + prevDelay;
+      }, 0);
 
       const id = setTimeout(() => {
-        setTerminalLines((prev) => [...prev, line]);
-        if (index === lines.length - 1) {
+        try {
+          setTerminalLines((prev) => [...prev, line]);
+          // 最後の行が表示されたらアニメーション完了フラグを設定
+          if (index === lines.length - 1) {
+            setIsAnimationComplete(true);
+          }
+        } catch (error) {
+          console.warn(
+            "ターミナルアニメーション中にエラーが発生しました:",
+            error
+          );
+          // エラー時は全ての行を即座に表示
+          setTerminalLines(lines);
           setIsAnimationComplete(true);
         }
       }, cumulativeDelay);
@@ -93,6 +87,16 @@ export default function TerminalOutput({
 
   const handleSkip = () => {
     setIsSkipped(true);
+  };
+
+  // 行の種類に応じたスタイルを取得する関数
+  const getLineStyle = (line: string): string => {
+    if (line.startsWith("$"))
+      return "text-primary-foreground dark:text-primary";
+    if (line.includes("Account:")) return "text-yellow-400";
+    if (line.includes("Ready") || line.includes("nodes"))
+      return "text-green-400";
+    return "whitespace-pre-wrap break-words text-cyan-400";
   };
 
   return (
@@ -107,42 +111,17 @@ export default function TerminalOutput({
         {!isAnimationComplete && !isSkipped && (
           <button
             onClick={handleSkip}
-            className="ml-auto mr-2 px-2 py-1 text-xs text-gray-400 hover:text-gray-200 transition-colors"
+            className="ml-auto mr-2 px-2 py-1 text-xs text-gray-400 hover:text-gray-200 transition-colors rounded"
+            aria-label="アニメーションをスキップしてすべてのターミナル出力を表示"
           >
-            Skip
-          </button>
-        )}
-      </div>
-        <div className="terminal-dot yellow"></div>
-        <div className="terminal-dot green"></div>
-        <span className="text-gray-400 text-sm ml-4">
-          micci184@cloud-workstation
-        </span>
-        {!isAnimationComplete && !isSkipped && (
-          <button
-            onClick={handleSkip}
-            className="ml-auto mr-2 px-2 py-1 text-xs text-gray-400 hover:text-gray-200 transition-colors"
-          >
-            Skip
+            ⏩ Skip
           </button>
         )}
       </div>
       <div className="p-4 space-y-2 text-left">
         {terminalLines.map((line, index) => (
           <div key={index} className="text-xs sm:text-sm">
-            {line.startsWith("$") ? (
-              <span className="text-primary-foreground dark:text-primary">
-                {line}
-              </span>
-            ) : line.includes("Account:") ? (
-              <span className="text-yellow-400">{line}</span>
-            ) : line.includes("Ready") || line.includes("nodes") ? (
-              <span className="text-green-400">{line}</span>
-            ) : (
-              <span className="whitespace-pre-wrap break-words text-cyan-400">
-                {line}
-              </span>
-            )}
+            <span className={getLineStyle(line)}>{line}</span>
           </div>
         ))}
         <div className="flex items-center">
