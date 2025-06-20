@@ -15,7 +15,6 @@ export default function TerminalOutput({
 
   useEffect(() => {
     if (isSkipped) {
-      // スキップされた場合、すべての行を即座に表示
       const lines = [
         "$ whoami",
         "micci184 - Full Stack Engineer & Cloud Architect",
@@ -38,7 +37,6 @@ export default function TerminalOutput({
       return;
     }
 
-    // Simulate terminal loading with cloud focus
     const lines = [
       "$ whoami",
       "micci184 - Full Stack Engineer & Cloud Architect",
@@ -57,59 +55,26 @@ export default function TerminalOutput({
       "$",
     ];
 
-    const tids: NodeJS.Timeout[] = [];
+    const tids: ReturnType<typeof setTimeout>[] = [];
+
     lines.forEach((line, index) => {
-      // コンテンツに応じた可変間隔
-      let delay = 700; // デフォルト
+      let delay = 700;
       if (line.startsWith("$")) {
-        delay = 500; // コマンド入力は短め
+        delay = 500;
       } else if (line.length > 40) {
-        delay = 800; // 長い出力は長め
+        delay = 800;
       }
 
-      const cumulativeDelay = lines
-        .slice(0, index)
-        .reduce((acc, prevLine) => {
-          let prevDelay = 700;
-          if (prevLine.startsWith("$")) {
-            prevDelay = 500;
-          } else if (prevLine.length > 40) {
-            prevDelay = 800;
-          }
-          return acc + prevDelay;
-        }, 0);
-
-      const id = setTimeout(() => {
-        setTerminalLines((prev) => [...prev, line]);
-        if (index === lines.length - 1) {
-          setIsAnimationComplete(true);
+      const cumulativeDelay = lines.slice(0, index).reduce((acc, prevLine) => {
+        let prevDelay = 700;
+        if (prevLine.startsWith("$")) {
+          prevDelay = 500;
+        } else if (prevLine.length > 40) {
+          prevDelay = 800;
         }
-      }, cumulativeDelay);
-      tids.push(id);
-    });
+        return acc + prevDelay;
+      }, 0);
 
-    return () => tids.forEach(clearTimeout);
-  }, [isSkipped]);
-
-  const handleSkip = () => {
-    setIsSkipped(true);
-  };
-
-      const id = setTimeout(() => {
-        setTerminalLines((prev) => [...prev, line]);
-        if (index === lines.length - 1) {
-          setIsAnimationComplete(true);
-        }
-      }, cumulativeDelay);
-      tids.push(id);
-    });
-
-    return () => tids.forEach(clearTimeout);
-  }, [isSkipped]);
-
-  const handleSkip = () => {
-    setIsSkipped(true);
-  };
       const id = setTimeout(() => {
         setTerminalLines((prev) => [...prev, line]);
         if (index === lines.length - 1) {
@@ -120,14 +85,15 @@ export default function TerminalOutput({
       tids.push(id);
     });
 
-    return () => tids.forEach(clearTimeout);
+    return () => {
+      tids.forEach(clearTimeout);
+    };
   }, [isSkipped]);
 
   const handleSkip = () => {
     setIsSkipped(true);
   };
 
-  // 行の種類に応じたスタイルを取得する関数
   const getLineStyle = (line: string): string => {
     if (line.startsWith("$"))
       return "text-primary-foreground dark:text-primary";
