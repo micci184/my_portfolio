@@ -144,10 +144,125 @@ export function checkHeadingHierarchy(): AccessibilityIssue[] {
  * @returns 見つかった問題の配列
  */
 export function checkContrastRatio(): AccessibilityIssue[] {
-  // 実際の実装では、CSSの計算済みスタイルを取得し、
-  // 背景色と前景色のコントラスト比を計算する必要があります
-  // この実装は簡易的なものです
-  return [];
+  if (typeof document === "undefined") {
+    return [];
+  }
+
+  const issues: AccessibilityIssue[] = [];
+  const elements = document.querySelectorAll("*");
+
+  elements.forEach((element) => {
+    const style = window.getComputedStyle(element);
+    const color = style.color;
+    const backgroundColor = style.backgroundColor;
+
+    if (color && backgroundColor) {
+      const contrastRatio = calculateContrastRatio(color, backgroundColor);
+      const isLargeText =
+        parseFloat(style.fontSize) >= 18 ||
+        (parseFloat(style.fontSize) >= 14 && style.fontWeight === "bold");
+      const threshold = isLargeText ? 3 : 4.5;
+
+      if (contrastRatio < threshold) {
+        issues.push({
+          element: element as HTMLElement,
+          type: "low-contrast",
+          description: `コントラスト比が低すぎます (${contrastRatio.toFixed(
+            2
+          )}:1)`,
+          impact: "serious",
+          helpUrl:
+            "https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html",
+        });
+      }
+    }
+  });
+
+  return issues;
+}
+
+/**
+ * 色からRGB値を抽出する補助関数
+ * @param color CSSの色表現
+ * @returns RGB値の配列 [r, g, b]
+ */
+function extractRGB(color: string): number[] {
+  // rgb(r, g, b) または rgba(r, g, b, a) 形式の場合
+  const rgbMatch = color.match(
+    /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/
+  );
+  if (rgbMatch) {
+    return [
+      parseInt(rgbMatch[1], 10),
+      parseInt(rgbMatch[2], 10),
+      parseInt(rgbMatch[3], 10),
+    ];
+  }
+
+  // 16進数表記の場合
+  const hexMatch = color.match(/#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})/i);
+  if (hexMatch) {
+    return [
+      parseInt(hexMatch[1], 16),
+      parseInt(hexMatch[2], 16),
+      parseInt(hexMatch[3], 16),
+    ];
+  }
+
+  // 簡易16進数表記の場合
+  const shortHexMatch = color.match(/#([a-f\d])([a-f\d])([a-f\d])/i);
+  if (shortHexMatch) {
+    return [
+      parseInt(shortHexMatch[1] + shortHexMatch[1], 16),
+      parseInt(shortHexMatch[2] + shortHexMatch[2], 16),
+      parseInt(shortHexMatch[3] + shortHexMatch[3], 16),
+    ];
+  }
+
+  // デフォルト値（黒）
+  return [0, 0, 0];
+}
+
+/**
+ * 色の相対輝度を計算する
+ * WCAG 2.0 の定義に基づく: https://www.w3.org/TR/WCAG20-TECHS/G17.html
+ * @param rgb RGB値の配列 [r, g, b]
+ * @returns 相対輝度 (0～1)
+ */
+function calculateRelativeLuminance(rgb: number[]): number {
+  // sRGBの各成分を0～1の範囲に正規化
+  const normalized = rgb.map((val) => val / 255);
+
+  // 各成分に対して相対輝度の計算を行う
+  const transformed = normalized.map((val) => {
+    return val <= 0.03928 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4);
+  });
+
+  // 輝度の計算（赤:0.2126, 緑:0.7152, 青:0.0722の重み付け）
+  return (
+    0.2126 * transformed[0] + 0.7152 * transformed[1] + 0.0722 * transformed[2]
+  );
+}
+
+/**
+ * 2つの色のコントラスト比を計算する
+ * @param color1 前景色
+ * @param color2 背景色
+ * @returns コントラスト比 (1～21)
+ */
+function calculateContrastRatio(color1: string, color2: string): number {
+  const rgb1 = extractRGB(color1);
+  const rgb2 = extractRGB(color2);
+
+  const luminance1 = calculateRelativeLuminance(rgb1);
+  const luminance2 = calculateRelativeLuminance(rgb2);
+
+  // 明るい方を分子、暗い方を分母にする
+  const lighter = Math.max(luminance1, luminance2);
+  const darker = Math.min(luminance1, luminance2);
+
+  // コントラスト比の計算式: (L1 + 0.05) / (L2 + 0.05)
+  return (lighter + 0.05) / (darker + 0.05);
 }
 
 /**

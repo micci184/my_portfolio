@@ -43,10 +43,10 @@ export function getLCP(): number | undefined {
     return undefined;
   }
 
-  const entries = window.performance.getEntriesByType("paint");
-  const lcpEntry = entries.find(
-    (entry) => entry.name === "largest-contentful-paint"
+  const entries = window.performance.getEntriesByType(
+    "largest-contentful-paint"
   );
+  const lcpEntry = entries[entries.length - 1]; // Get the most recent LCP entry
 
   return lcpEntry ? lcpEntry.startTime : undefined;
 }

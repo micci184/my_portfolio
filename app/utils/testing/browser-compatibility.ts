@@ -80,20 +80,34 @@ export function isFeatureSupported(feature: string): boolean {
     case "PerformanceObserver":
       return "PerformanceObserver" in window;
     case "WebP":
-      // WebPサポートのチェックは非同期で行う必要があるため、
-      // この実装は簡易的なものです
-      return true;
+      return checkWebPSupport();
     case "AVIF":
-      // AVIFサポートのチェックも非同期で行う必要があります
-      return true;
+      return checkAVIFSupport();
     case "CSS Grid":
-      return window.CSS && CSS.supports("display", "grid");
+      return CSS.supports("display", "grid");
     case "CSS Flexbox":
-      return window.CSS && CSS.supports("display", "flex");
+      return CSS.supports("display", "flex");
     case "CSS Variables":
-      return window.CSS && CSS.supports("--custom-property", "value");
+      return CSS.supports("--test: 0");
+    case "Fetch API":
+      return "fetch" in window;
     case "Service Worker":
       return "serviceWorker" in navigator;
+    case "Web Workers":
+      return "Worker" in window;
+    case "WebGL":
+      try {
+        const canvas = document.createElement("canvas");
+        return !!(
+          window.WebGLRenderingContext &&
+          (canvas.getContext("webgl") ||
+            canvas.getContext("experimental-webgl"))
+        );
+      } catch (e) {
+        return false;
+      }
+    case "WebRTC":
+      return "RTCPeerConnection" in window;
     default:
       return false;
   }

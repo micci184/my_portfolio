@@ -39,31 +39,25 @@ export {
  * 開発モードでのみ実行されるべき関数
  */
 export function runAllTests(): void {
-  if (typeof window === "undefined" || process.env.NODE_ENV === "production") {
+  if (
+    typeof window === "undefined" ||
+    process.env.NEXT_PUBLIC_IS_PRODUCTION === "true"
+  ) {
     return;
   }
 
-  // 各種テストを実行
-  window.addEventListener("load", () => {
-    setTimeout(() => {
-      console.group("🧪 テスト・検証結果");
+  console.log("テスト・検証ユーティリティを実行中...");
 
-      // パフォーマンスメトリクス
-      console.group("📊 パフォーマンスメトリクス");
-      logPerformanceMetrics();
-      console.groupEnd();
+  // パフォーマンスメトリクスの収集と表示
+  setTimeout(() => {
+    logPerformanceMetrics();
+  }, 3000);
 
-      // ブラウザ互換性
-      console.group("🌐 ブラウザ互換性");
-      logBrowserCompatibility();
-      console.groupEnd();
+  // ブラウザ互換性情報の収集と表示
+  logBrowserCompatibility();
 
-      // アクセシビリティ
-      console.group("♿ アクセシビリティ");
-      logAccessibilityIssues();
-      console.groupEnd();
-
-      console.groupEnd();
-    }, 3000);
-  });
+  // アクセシビリティの問題を検出して表示
+  setTimeout(() => {
+    logAccessibilityIssues();
+  }, 1000);
 }
