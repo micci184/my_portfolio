@@ -37,11 +37,13 @@ export {
 /**
  * すべてのテストユーティリティを実行する
  * 開発モードでのみ実行されるべき関数
+ * Next.jsでクライアントサイドで環境変数にアクセスするため、NEXT_PUBLIC_プレフィックスが必要
  */
 export function runAllTests(): void {
   if (
     typeof window === "undefined" ||
     process.env.NEXT_PUBLIC_IS_PRODUCTION === "true"
+  ) {
   ) {
     return;
   }
