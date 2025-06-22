@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ModeToggle } from "@/app/components/layout/ModeToggle";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 
@@ -45,7 +45,7 @@ export default function Navbar() {
             </div>
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
-            <ModeToggle />
+            <ThemeToggle />
           </div>
           <div className="flex items-center sm:hidden">
             <Button variant="ghost" size="sm">
