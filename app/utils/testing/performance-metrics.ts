@@ -35,10 +35,11 @@ export function getPerformanceEntries(entryType: string): PerformanceEntry[] {
 }
 
 /**
+ /**
  * LCP (Largest Contentful Paint) の値を取得する
  * @returns LCPの値（ミリ秒）またはundefined
  */
-export function getLCP(): number | undefined {
+ export function getLCP(): number | undefined {
   if (typeof window === "undefined" || !window.performance) {
     return undefined;
   }
@@ -49,13 +50,13 @@ export function getLCP(): number | undefined {
   const lcpEntry = entries[entries.length - 1]; // Get the most recent LCP entry
 
   return lcpEntry ? lcpEntry.startTime : undefined;
-}
+ }
 
-/**
+ /**
  * FCP (First Contentful Paint) の値を取得する
  * @returns FCPの値（ミリ秒）またはundefined
  */
-export function getFCP(): number | undefined {
+ export function getFCP(): number | undefined {
   if (typeof window === "undefined" || !window.performance) {
     return undefined;
   }
@@ -68,18 +69,20 @@ export function getFCP(): number | undefined {
   );
 
   return fcpEntry ? fcpEntry.startTime : undefined;
-}
+ }
 
-/**
+ /**
  * CLS (Cumulative Layout Shift) の値を取得する
  * @returns CLSの値またはundefined
  */
-export function getCLS(): number | undefined {
+ export function getCLS(): number | undefined {
   if (typeof window === "undefined" || !window.performance) {
     return undefined;
   }
 
-  const entries = window.performance.getEntriesByType("layout-shift") as any[];
+  const entries = window.performance.getEntriesByType(
+    "layout-shift"
+  ) as any[];
   let clsValue = 0;
 
   entries.forEach((entry) => {
@@ -89,16 +92,14 @@ export function getCLS(): number | undefined {
   });
 
   return clsValue;
-}
+ }
 
-/**
+ /**
  * LCP値をリアルタイムで監視する（PerformanceObserverを使用）
  * @param callback LCP値が更新されるたびに呼び出されるコールバック関数
  * @returns 監視を停止するための関数
  */
-export function observeLCP(
-  callback: (lcp: number) => void
-): (() => void) | undefined {
+ export function observeLCP(callback: (lcp: number) => void): (() => void) | undefined {
   if (typeof window === "undefined" || !window.PerformanceObserver) {
     return undefined;
   }
@@ -120,16 +121,16 @@ export function observeLCP(
     console.warn("PerformanceObserver for LCP not supported:", error);
     return undefined;
   }
-}
+ }
 
-/**
+ /**
  * すべてのパフォーマンスメトリクスを収集する
  * @param useObserver PerformanceObserverを使用してリアルタイム測定を行うかどうか
  * @returns パフォーマンスメトリクスのオブジェクト
  */
-export function collectPerformanceMetrics(
+ export function collectPerformanceMetrics(
   useObserver = false
-): PerformanceMetrics {
+ ): PerformanceMetrics {
   const metrics: PerformanceMetrics = {
     lcp: getLCP(),
     fcp: getFCP(),
@@ -143,6 +144,14 @@ export function collectPerformanceMetrics(
       metrics.lcp = lcp;
     });
 
+    // 一定時間後に監視を停止（メモリリーク防止）
+    if (stopObserver) {
+      setTimeout(stopObserver, 10000); // 10秒後に停止
+    }
+  }
+
+  return metrics;
+ }
     // 一定時間後に監視を停止（メモリリーク防止）
     if (stopObserver) {
       setTimeout(stopObserver, 10000); // 10秒後に停止
