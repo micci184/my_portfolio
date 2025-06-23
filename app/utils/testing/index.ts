@@ -34,6 +34,11 @@ export {
   logAccessibilityIssues,
 } from "./accessibility-checker";
 
+// 関数を直接インポートして使用
+import { logPerformanceMetrics } from "./performance-metrics";
+import { logBrowserCompatibility } from "./browser-compatibility";
+import { logAccessibilityIssues } from "./accessibility-checker";
+
 /**
  * すべてのテストユーティリティを実行する
  * 開発モードでのみ実行されるべき関数

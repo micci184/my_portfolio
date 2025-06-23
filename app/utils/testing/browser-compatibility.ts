@@ -18,6 +18,47 @@ export interface BrowserCompatibility {
 }
 
 /**
+ * WebP画像形式のサポートをチェックする
+ * @returns サポートされていればtrue、そうでなければfalse
+ */
+function checkWebPSupport(): boolean {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  // キャンバスを使用したWebPサポートチェック
+  const canvas = document.createElement("canvas");
+  if (!canvas || !canvas.getContext) {
+    return false;
+  }
+
+  // toDataURLでWebP形式を指定して、結果にWebPが含まれるかをチェック
+  return canvas.toDataURL("image/webp").indexOf("data:image/webp") === 0;
+}
+
+/**
+ * AVIF画像形式のサポートをチェックする
+ * @returns サポートされていればtrue、そうでなければfalse
+ */
+function checkAVIFSupport(): boolean {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  // 現時点では簡易的な実装
+  // 実際には画像の読み込みテストなどが必要だが、クライアントサイドでの実行時間を考慮して簡略化
+  const img = new Image();
+
+  // AVIF MIMEタイプがサポートされているかを確認
+  // 注: これは完全な検出ではなく、ブラウザによっては不正確な場合がある
+  return (
+    typeof img.decode === "function" &&
+    "HTMLImageElement" in window &&
+    "loading" in HTMLImageElement.prototype
+  );
+}
+
+/**
  * ブラウザ名とバージョンを取得する
  * 注: この実装は簡易的なもので、正確なブラウザ検出には限界があります
  * @returns ブラウザ名とバージョンを含むオブジェクト
