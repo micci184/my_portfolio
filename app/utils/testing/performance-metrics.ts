@@ -35,27 +35,70 @@ export function getPerformanceEntries(entryType: string): PerformanceEntry[] {
 }
 
 /**
- /**
  * LCP (Largest Contentful Paint) の値を取得する
  * @returns LCPの値（ミリ秒）またはundefined
  */
- export function getLCP(): number | undefined {
+export function getLCP(): number | undefined {
   if (typeof window === "undefined" || !window.performance) {
     return undefined;
   }
 
-  const entries = window.performance.getEntriesByType("largest-contentful-paint") as PerformanceEntry[];
+  const entries = window.performance.getEntriesByType(
+    "largest-contentful-paint"
+  ) as PerformanceEntry[];
   const lcpEntry = entries[entries.length - 1]; // Get the most recent LCP entry
 
   return lcpEntry ? lcpEntry.startTime : undefined;
- }
+}
 
- /**
+/**
+ * FCP (First Contentful Paint) の値を取得する
+ * @returns FCPの値（ミリ秒）またはundefined
+ */
+export function getFCP(): number | undefined {
+  if (typeof window === "undefined" || !window.performance) {
+    return undefined;
+  }
+
+  const entries = window.performance.getEntriesByType(
+    "paint"
+  ) as PerformanceEntry[];
+  const fcpEntry = entries.find(
+    (entry) => entry.name === "first-contentful-paint"
+  );
+
+  return fcpEntry ? fcpEntry.startTime : undefined;
+}
+
+/**
+ * CLS (Cumulative Layout Shift) の値を取得する
+ * @returns CLSの値またはundefined
+ */
+export function getCLS(): number | undefined {
+  if (typeof window === "undefined" || !window.performance) {
+    return undefined;
+  }
+
+  const entries = window.performance.getEntriesByType("layout-shift") as any[];
+  let clsValue = 0;
+
+  entries.forEach((entry) => {
+    if (!entry.hadRecentInput) {
+      clsValue += entry.value;
+    }
+  });
+
+  return clsValue;
+}
+
+/**
  * LCP値をリアルタイムで監視する（PerformanceObserverを使用）
  * @param callback LCP値が更新されるたびに呼び出されるコールバック関数
  * @returns 監視を停止するための関数
  */
- export function observeLCP(callback: (lcp: number) => void): (() => void) | undefined {
+export function observeLCP(
+  callback: (lcp: number) => void
+): (() => void) | undefined {
   if (typeof window === "undefined" || !window.PerformanceObserver) {
     return undefined;
   }
@@ -69,22 +112,24 @@ export function getPerformanceEntries(entryType: string): PerformanceEntry[] {
       }
     });
 
-    observer.observe({ type: 'largest-contentful-paint', buffered: true });
+    observer.observe({ type: "largest-contentful-paint", buffered: true });
 
     // 監視を停止するための関数を返す
     return () => observer.disconnect();
   } catch (error) {
-    console.warn('PerformanceObserver for LCP not supported:', error);
+    console.warn("PerformanceObserver for LCP not supported:", error);
     return undefined;
   }
- }
+}
 
- /**
+/**
  * すべてのパフォーマンスメトリクスを収集する
  * @param useObserver PerformanceObserverを使用してリアルタイム測定を行うかどうか
  * @returns パフォーマンスメトリクスのオブジェクト
  */
- export function collectPerformanceMetrics(useObserver = false): PerformanceMetrics {
+export function collectPerformanceMetrics(
+  useObserver = false
+): PerformanceMetrics {
   const metrics: PerformanceMetrics = {
     lcp: getLCP(),
     fcp: getFCP(),
@@ -105,13 +150,13 @@ export function getPerformanceEntries(entryType: string): PerformanceEntry[] {
   }
 
   return metrics;
- }
+}
 
- /**
+/**
  * パフォーマンスメトリクスをコンソールに出力する
  * 開発時のデバッグ用
  */
- export function logPerformanceMetrics(): void {
+export function logPerformanceMetrics(): void {
   if (typeof window === "undefined") return;
 
   let finalMetrics: PerformanceMetrics = {};
@@ -140,11 +185,7 @@ export function getPerformanceEntries(entryType: string): PerformanceEntry[] {
       if (metrics.lcp < 2500) {
         console.log("LCP: Good ✅", metrics.lcp.toFixed(2), "ms");
       } else if (metrics.lcp < 4000) {
-        console.log(
-          "LCP: Needs Improvement ⚠️",
-          metrics.lcp.toFixed(2),
-          "ms"
-        );
+        console.log("LCP: Needs Improvement ⚠️", metrics.lcp.toFixed(2), "ms");
       } else {
         console.log("LCP: Poor ❌", metrics.lcp.toFixed(2), "ms");
       }
@@ -154,11 +195,7 @@ export function getPerformanceEntries(entryType: string): PerformanceEntry[] {
       if (metrics.fcp < 1800) {
         console.log("FCP: Good ✅", metrics.fcp.toFixed(2), "ms");
       } else if (metrics.fcp < 3000) {
-        console.log(
-          "FCP: Needs Improvement ⚠️",
-          metrics.fcp.toFixed(2),
-          "ms"
-        );
+        console.log("FCP: Needs Improvement ⚠️", metrics.fcp.toFixed(2), "ms");
       } else {
         console.log("FCP: Poor ❌", metrics.fcp.toFixed(2), "ms");
       }
@@ -175,11 +212,11 @@ export function getPerformanceEntries(entryType: string): PerformanceEntry[] {
   });
 
   // ページが非表示になるかアンロードされる時に最終化
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') {
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
       finalizeAndLog();
     }
   });
 
-  window.addEventListener('pagehide', finalizeAndLog);
- }
+  window.addEventListener("pagehide", finalizeAndLog);
+}

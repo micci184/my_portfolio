@@ -44,7 +44,6 @@ export function runAllTests(): void {
     typeof window === "undefined" ||
     process.env.NEXT_PUBLIC_IS_PRODUCTION === "true"
   ) {
-  ) {
     return;
   }
 

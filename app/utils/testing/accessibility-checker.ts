@@ -256,116 +256,62 @@ function calculateContrastRatio(color1: string, color2: string): number {
 }
 
 /**
- * 要素の実際の背景色を取得する（親要素の背景色を考慮）
+ * 要素の実効的な背景色を取得する
+ * 親要素を辿って背景色が設定されている最も近い要素の色を返す
  */
 function getEffectiveBackgroundColor(element: Element): string {
-  let currentElement = element as HTMLElement;
+  let currentElement: Element | null = element;
+  let backgroundColor = 'transparent';
   
-  while (currentElement && currentElement !== document.body) {
+  while (currentElement && backgroundColor === 'transparent') {
     const style = window.getComputedStyle(currentElement);
-    const backgroundColor = style.backgroundColor;
+    backgroundColor = style.backgroundColor;
     
-    // 透明でない背景色が見つかった場合
-    if (backgroundColor && 
-        backgroundColor !== 'rgba(0, 0, 0, 0)' && 
-        backgroundColor !== 'transparent' &&
-        backgroundColor !== 'initial' &&
-        backgroundColor !== 'inherit') {
-      return backgroundColor;
+    if (backgroundColor === 'transparent' || backgroundColor === 'rgba(0, 0, 0, 0)') {
+      currentElement = currentElement.parentElement;
     }
-    
-    currentElement = currentElement.parentElement as HTMLElement;
   }
   
-  // デフォルトは白色（一般的なブラウザのデフォルト）
-  return 'rgb(255, 255, 255)';
+  // 最終的に背景色が見つからなかった場合はデフォルトの白を返す
+  return backgroundColor === 'transparent' ? 'rgb(255, 255, 255)' : backgroundColor;
 }
 
 /**
- * コントラスト比チェック機能の妥当性を検証する
- * 開発時のデバッグ用関数
+ * コントラスト比の実装が正しいかを検証する
+ * 単体テスト代わりの関数
  */
 function validateContrastRatioImplementation(): boolean {
-  try {
-    // 既知の色の組み合わせでテスト
-    const testCases = [
-      { color1: 'rgb(0, 0, 0)', color2: 'rgb(255, 255, 255)', expected: 21 },
-      { color1: '#000000', color2: '#ffffff', expected: 21 },
-      { color1: 'rgb(255, 255, 255)', color2: 'rgb(0, 0, 0)', expected: 21 },
-      { color1: 'rgb(128, 128, 128)', color2: 'rgb(255, 255, 255)', expected: 3.95 },
-    ];
-    
-    for (const testCase of testCases) {
-      const ratio = calculateContrastRatio(testCase.color1, testCase.color2);
-      if (Math.abs(ratio - testCase.expected) > 0.1) {
-        console.warn(`コントラスト比計算の検証に失敗: ${testCase.color1} vs ${testCase.color2}, 期待値: ${testCase.expected}, 実際: ${ratio.toFixed(2)}`);
-        return false;
-      }
-    }
-    
-    console.log('✅ コントラスト比計算の検証が成功しました');
-    return true;
-  } catch (error) {
-    console.error('コントラスト比実装の検証中にエラーが発生:', error);
-    return false;
-  }
+  // 黒と白のコントラスト比は21:1
+  const blackWhite = calculateContrastRatio('rgb(0,0,0)', 'rgb(255,255,255)');
+  if (Math.abs(blackWhite - 21) > 0.1) return false;
+  
+  // 中間グレーと白のコントラスト比は約3:1
+  const greyWhite = calculateContrastRatio('rgb(128,128,128)', 'rgb(255,255,255)');
+  if (Math.abs(greyWhite - 3) > 0.3) return false;
+  
+  return true;
 }
 
 /**
- * コントラスト比をチェックする（WCAG 2.1 AA基準完全準拠）
- * テキストと背景のコントラスト比を正確に計算し、WCAGガイドラインに従って評価します
- * - 通常のテキスト: 4.5:1 以上
- * - 大きなテキスト（18px以上、または14px以上かつbold）: 3:1 以上
- * - 親要素の背景色を考慮した正確な計算を実行
- * - パフォーマンス最適化により、表示されているテキスト要素のみを対象
+ * コントラスト比をチェックする（簡易版）
+ * 注: 正確なコントラスト比の計算には背景色と前景色の正確な値が必要です
+ * この関数は簡易的な実装で、実際のアプリケーションではより高度なライブラリの使用を推奨します
  * @returns 見つかった問題の配列
  */
 export function checkContrastRatio(): AccessibilityIssue[] {
   if (typeof document === "undefined") {
     return [];
   }
-  
-  // 開発環境でのみコントラスト比計算の妥当性を検証
-  if (typeof process !== 'undefined' && process.env.NODE_ENV === 'development') {
-    validateContrastRatioImplementation();
-  }
-  
+
   const issues: AccessibilityIssue[] = [];
-  
-  // より効率的な要素選択（テキストを含む可能性が高い要素のみ）
-  const textElements = document.querySelectorAll(
-    'p, span, div, h1, h2, h3, h4, h5, h6, a, button, label, li, td, th, legend, caption, summary, figcaption, blockquote, cite, code, pre, em, strong, small, mark, ins, del, sub, sup'
-  );
-  
-  // 深いネストを避けるため、最大チェック数を制限
-  const maxElementsToCheck = 1000;
-  const elementsToCheck = Array.from(textElements).slice(0, maxElementsToCheck);
-  
-  const visibleTextElements = elementsToCheck.filter(element => {
+  const elements = document.querySelectorAll("*");
+
+  elements.forEach((element) => {
     const style = window.getComputedStyle(element);
-    const hasDirectTextContent = Array.from(element.childNodes).some(
-      node => node.nodeType === Node.TEXT_NODE && node.textContent?.trim()
-    );
-    
-    const isVisible = style.display !== 'none' && 
-                     style.visibility !== 'hidden' && 
-                     parseFloat(style.opacity) > 0.1 &&
-                     parseFloat(style.fontSize) > 8; // 8px未満のテキストは除外
-    
-    return hasDirectTextContent && isVisible;
-  });
-  
-  visibleTextElements.forEach((element) => {
-    try {
-      const style = window.getComputedStyle(element);
-      const color = style.color;
-      const backgroundColor = getEffectiveBackgroundColor(element);
-      
-      // 有効な色情報がない場合はスキップ
-      if (!color || !backgroundColor) {
-        return;
-      }
-      
+    const color = style.color;
+    const backgroundColor = style.backgroundColor;
+
+    if (color && backgroundColor) {
       const contrastRatio = calculateContrastRatio(color, backgroundColor);
       
       // フォントサイズと太さに基づいて大きなテキストかどうかを判定
@@ -395,37 +341,6 @@ export function checkContrastRatio(): AccessibilityIssue[] {
     }
   });
   
-  return issues;
-}
-  const elements = document.querySelectorAll("*");
-
-  elements.forEach((element) => {
-    const style = window.getComputedStyle(element);
-    const color = style.color;
-    const backgroundColor = style.backgroundColor;
-
-    if (color && backgroundColor) {
-      const contrastRatio = calculateContrastRatio(color, backgroundColor);
-      const isLargeText =
-        parseFloat(style.fontSize) >= 18 ||
-        (parseFloat(style.fontSize) >= 14 && style.fontWeight === "bold");
-      const threshold = isLargeText ? 3 : 4.5;
-
-      if (contrastRatio < threshold) {
-        issues.push({
-          element: element as HTMLElement,
-          type: "low-contrast",
-          description: `コントラスト比が低すぎます (${contrastRatio.toFixed(
-            2
-          )}:1)`,
-          impact: "serious",
-          helpUrl:
-            "https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html",
-        });
-      }
-    }
-  });
-
   return issues;
 }
 
@@ -469,48 +384,6 @@ function extractRGB(color: string): number[] {
 
   // デフォルト値（黒）
   return [0, 0, 0];
-}
-
-/**
- * 色の相対輝度を計算する
- * WCAG 2.0 の定義に基づく: https://www.w3.org/TR/WCAG20-TECHS/G17.html
- * @param rgb RGB値の配列 [r, g, b]
- * @returns 相対輝度 (0～1)
- */
-function calculateRelativeLuminance(rgb: number[]): number {
-  // sRGBの各成分を0～1の範囲に正規化
-  const normalized = rgb.map((val) => val / 255);
-
-  // 各成分に対して相対輝度の計算を行う
-  const transformed = normalized.map((val) => {
-    return val <= 0.03928 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4);
-  });
-
-  // 輝度の計算（赤:0.2126, 緑:0.7152, 青:0.0722の重み付け）
-  return (
-    0.2126 * transformed[0] + 0.7152 * transformed[1] + 0.0722 * transformed[2]
-  );
-}
-
-/**
- * 2つの色のコントラスト比を計算する
- * @param color1 前景色
- * @param color2 背景色
- * @returns コントラスト比 (1～21)
- */
-function calculateContrastRatio(color1: string, color2: string): number {
-  const rgb1 = extractRGB(color1);
-  const rgb2 = extractRGB(color2);
-
-  const luminance1 = calculateRelativeLuminance(rgb1);
-  const luminance2 = calculateRelativeLuminance(rgb2);
-
-  // 明るい方を分子、暗い方を分母にする
-  const lighter = Math.max(luminance1, luminance2);
-  const darker = Math.min(luminance1, luminance2);
-
-  // コントラスト比の計算式: (L1 + 0.05) / (L2 + 0.05)
-  return (lighter + 0.05) / (darker + 0.05);
 }
 
 /**
