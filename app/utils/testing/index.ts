@@ -46,6 +46,8 @@ import { logAccessibilityIssues } from "./accessibility-checker";
  */
  * Next.jsでクライアントサイドで環境変数にアクセスするため、NEXT_PUBLIC_プレフィックスが必要
  */
+ * Next.jsでクライアントサイドで環境変数にアクセスするため、NEXT_PUBLIC_プレフィックスが必要
+ */
 export function runAllTests(): void {
   if (
     typeof window === "undefined" ||
