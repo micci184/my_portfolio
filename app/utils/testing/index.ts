@@ -68,4 +68,4 @@ export function runAllTests(): void {
   setTimeout(() => {
     logAccessibilityIssues();
   }, 1000);
-}
+} 
