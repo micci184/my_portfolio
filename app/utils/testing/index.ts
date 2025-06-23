@@ -42,11 +42,7 @@ import { logAccessibilityIssues } from "./accessibility-checker";
 /**
  * すべてのテストユーティリティを実行する
  * 開発モードでのみ実行されるべき関数
- * Next.jsでクライアントサイドで環境変数にアクセスするため、NEXT_PUBLIC_プレフィックスが必要
- */
- * Next.jsでクライアントサイドで環境変数にアクセスするため、NEXT_PUBLIC_プレフィックスが必要
- */
- * Next.jsでクライアントサイドで環境変数にアクセスするため、NEXT_PUBLIC_プレフィックスが必要
+ * Next.jsでクライアントサイドで環境変数にアクセスするためNEXT_PUBLIC_プレフィックスが必要
  */
 export function runAllTests(): void {
   if (
@@ -70,4 +66,4 @@ export function runAllTests(): void {
   setTimeout(() => {
     logAccessibilityIssues();
   }, 1000);
-} 
+}
