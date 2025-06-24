@@ -140,166 +140,15 @@ export function checkHeadingHierarchy(): AccessibilityIssue[] {
 /**
  * RGB色文字列をRGB値オブジェクトに変換する
  */
-function parseRgbString(rgb: string): { r: number; g: number; b: number } | null {
+function parseRgbString(
+  rgb: string
+): { r: number; g: number; b: number } | null {
   const match = rgb.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
   if (!match) return null;
 
   const [, r, g, b] = match;
   return {
     r: parseInt(r, 10),
-    g: parseInt(g, 10),
-    b: parseInt(b, 10)
-  };
-}
-
-/**
- * RGBA色文字列をRGB値オブジェクトに変換する（アルファ値を考慮）
- */
-function parseRgbaString(rgba: string): { r: number; g: number; b: number; a: number } | null {
-  const match = rgba.match(/rgba\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)/);
-  if (!match) return null;
-
-  const [, r, g, b, a] = match;
-  return {
-    r: parseInt(r, 10),
-    g: parseInt(g, 10),
-    b: parseInt(b, 10),
-    a: parseFloat(a)
-  };
-}
-
-/**
- * Hex色をRGB値に変換する
- */
-function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-      }
-    : null;
-}
-
-/**
- * RGB値から相対輝度を計算する（WCAG 2.1準拠）
- */
-function calculateRelativeLuminance(r: number, g: number, b: number): number {
-  const sRGB = [r, g, b].map(c => {
-    c = c / 255;
-    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-  });
-
-  return 0.2126 * sRGB[0] + 0.7152 * sRGB[1] + 0.0722 * sRGB[2];
-}
-
-/**
- * 2つの色の間のコントラスト比を計算する（WCAG 2.1準拠）
- */
-function calculateContrastRatio(color1: string, color2: string): number {
-  let rgb1: { r: number; g: number; b: number } | null = null;
-  let rgb2: { r: number; g: number; b: number } | null = null;
-
-  // color1の解析
-  if (color1.startsWith('rgb(')) {
-    rgb1 = parseRgbString(color1);
-  } else if (color1.startsWith('rgba(')) {
-    const rgba = parseRgbaString(color1);
-    if (rgba) rgb1 = { r: rgba.r, g: rgba.g, b: rgba.b };
-  } else if (color1.startsWith('#')) {
-    rgb1 = hexToRgb(color1);
-  } else {
-    const namedColors: { [key: string]: string } = {
-      black: '#000000', white: '#ffffff', red: '#ff0000',
-      green: '#008000', blue: '#0000ff', yellow: '#ffff00',
-      cyan: '#00ffff', magenta: '#ff00ff', silver: '#c0c0c0',
-      gray: '#808080', grey: '#808080'
-    };
-    const hex = namedColors[color1.toLowerCase()];
-    if (hex) rgb1 = hexToRgb(hex);
-  }
-
-  // color2の解析
-  if (color2.startsWith('rgb(')) {
-    rgb2 = parseRgbString(color2);
-  } else if (color2.startsWith('rgba(')) {
-    const rgba = parseRgbaString(color2);
-    if (rgba) rgb2 = { r: rgba.r, g: rgba.g, b: rgba.b };
-  } else if (color2.startsWith('#')) {
-    rgb2 = hexToRgb(color2);
-  } else {
-    const namedColors: { [key: string]: string } = {
-      black: '#000000', white: '#ffffff', red: '#ff0000',
-      green: '#008000', blue: '#0000ff', yellow: '#ffff00',
-      cyan: '#00ffff', magenta: '#ff00ff', silver: '#c0c0c0',
-      gray: '#808080', grey: '#808080'
-    };
-    const hex = namedColors[color2.toLowerCase()];
-    if (hex) rgb2 = hexToRgb(hex);
-  }
-
-  if (!rgb1 || !rgb2) return 1;
-
-  const lum1 = calculateRelativeLuminance(rgb1.r, rgb1.g, rgb1.b);
-  const lum2 = calculateRelativeLuminance(rgb2.r, rgb2.g, rgb2.b);
-  const lighter = Math.max(lum1, lum2);
-  const darker = Math.min(lum1, lum2);
-
-  return (lighter + 0.05) / (darker + 0.05);
-}
-
-/**
- * 要素の実際の背景色を取得する（親要素の背景色を考慮）
- */
-function getEffectiveBackgroundColor(element: Element): string {
-  let currentElement = element as HTMLElement;
-  while (currentElement && currentElement !== document.body) {
-    const style = window.getComputedStyle(currentElement);
-    const bg = style.backgroundColor;
-    if (
-      bg &&
-      bg !== 'rgba(0, 0, 0, 0)' &&
-      bg !== 'transparent' &&
-      bg !== 'initial' &&
-      bg !== 'inherit'
-    ) {
-      return bg;
-    }
-    currentElement = currentElement.parentElement as HTMLElement;
-  }
-  return 'rgb(255, 255, 255)';
-}
-
-/**
- * コントラスト比チェック機能の妥当性を検証する
- * 開発時のデバッグ用関数
- */
-function validateContrastRatioImplementation(): boolean {
-  try {
-    const testCases = [
-      { color1: 'rgb(0, 0, 0)', color2: 'rgb(255, 255, 255)', expected: 21 },
-      { color1: '#000000', color2: '#ffffff', expected: 21 },
-      { color1: 'rgb(255, 255, 255)', color2: 'rgb(0, 0, 0)', expected: 21 },
-      { color1: 'rgb(128, 128, 128)', color2: 'rgb(255, 255, 255)', expected: 3.95 },
-    ];
-
-    for (const { color1, color2, expected } of testCases) {
-      const ratio = calculateContrastRatio(color1, color2);
-      if (Math.abs(ratio - expected) > 0.1) {
-        console.warn(
-          `コントラスト比検証失敗: ${color1} vs ${color2}, 期待: ${expected}, 実際: ${ratio.toFixed(2)}`
-        );
-        return false;
-      }
-    }
-    console.log('✅ コントラスト比計算の検証が成功しました');
-    return true;
-  } catch (e) {
-    console.error('コントラスト比検証中にエラー:', e);
-    return false;
-  }
-}
     g: parseInt(g, 10),
     b: parseInt(b, 10),
   };
@@ -350,73 +199,6 @@ function calculateRelativeLuminance(r: number, g: number, b: number): number {
 }
 
 /**
- * 要素の実効的な背景色を取得する
- * 親要素を辿って背景色が設定されている最も近い要素の色を返す
- */
-function getEffectiveBackgroundColor(element: Element): string {
-  let currentElement = element as HTMLElement;
-
-  while (currentElement && currentElement !== document.body) {
-    const style = window.getComputedStyle(currentElement);
-    const backgroundColor = style.backgroundColor;
-
-    // 透明でない背景色が見つかった場合
-    if (
-      backgroundColor &&
-      backgroundColor !== "rgba(0, 0, 0, 0)" &&
-      backgroundColor !== "transparent" &&
-      backgroundColor !== "initial" &&
-      backgroundColor !== "inherit"
-    ) {
-      return backgroundColor;
-    }
-
-    currentElement = currentElement.parentElement as HTMLElement;
-  }
-
-  // デフォルトは白色（一般的なブラウザのデフォルト）
-  return "rgb(255, 255, 255)";
-}
-
-/**
- * コントラスト比の実装が正しいかを検証する
- * 単体テスト代わりの関数
- */
-function validateContrastRatioImplementation(): boolean {
-  try {
-    // 既知の色の組み合わせでテスト
-    const testCases = [
-      { color1: "rgb(0, 0, 0)", color2: "rgb(255, 255, 255)", expected: 21 },
-      { color1: "#000000", color2: "#ffffff", expected: 21 },
-      { color1: "rgb(255, 255, 255)", color2: "rgb(0, 0, 0)", expected: 21 },
-      {
-        color1: "rgb(128, 128, 128)",
-        color2: "rgb(255, 255, 255)",
-        expected: 3.95,
-      },
-    ];
-
-    for (const testCase of testCases) {
-      const ratio = calculateContrastRatio(testCase.color1, testCase.color2);
-      if (Math.abs(ratio - testCase.expected) > 0.1) {
-        console.warn(
-          `コントラスト比計算の検証に失敗: ${testCase.color1} vs ${
-            testCase.color2
-          }, 期待値: ${testCase.expected}, 実際: ${ratio.toFixed(2)}`
-        );
-        return false;
-      }
-    }
-
-    console.log("✅ コントラスト比計算の検証が成功しました");
-    return true;
-  } catch (error) {
-    console.error("コントラスト比実装の検証中にエラーが発生:", error);
-    return false;
-  }
-}
-
-/**
  * 2つの色の間のコントラスト比を計算する（WCAG 2.1準拠）
  */
 function calculateContrastRatio(color1: string, color2: string): number {
@@ -428,13 +210,10 @@ function calculateContrastRatio(color1: string, color2: string): number {
     rgb1 = parseRgbString(color1);
   } else if (color1.startsWith("rgba(")) {
     const rgba = parseRgbaString(color1);
-    if (rgba) {
-      rgb1 = { r: rgba.r, g: rgba.g, b: rgba.b };
-    }
+    if (rgba) rgb1 = { r: rgba.r, g: rgba.g, b: rgba.b };
   } else if (color1.startsWith("#")) {
     rgb1 = hexToRgb(color1);
   } else {
-    // Named colors support (basic implementation)
     const namedColors: { [key: string]: string } = {
       black: "#000000",
       white: "#ffffff",
@@ -448,9 +227,8 @@ function calculateContrastRatio(color1: string, color2: string): number {
       gray: "#808080",
       grey: "#808080",
     };
-    if (namedColors[color1.toLowerCase()]) {
-      rgb1 = hexToRgb(namedColors[color1.toLowerCase()]);
-    }
+    const hex = namedColors[color1.toLowerCase()];
+    if (hex) rgb1 = hexToRgb(hex);
   }
 
   // color2の解析
@@ -458,9 +236,7 @@ function calculateContrastRatio(color1: string, color2: string): number {
     rgb2 = parseRgbString(color2);
   } else if (color2.startsWith("rgba(")) {
     const rgba = parseRgbaString(color2);
-    if (rgba) {
-      rgb2 = { r: rgba.r, g: rgba.g, b: rgba.b };
-    }
+    if (rgba) rgb2 = { r: rgba.r, g: rgba.g, b: rgba.b };
   } else if (color2.startsWith("#")) {
     rgb2 = hexToRgb(color2);
   } else {
@@ -477,20 +253,76 @@ function calculateContrastRatio(color1: string, color2: string): number {
       gray: "#808080",
       grey: "#808080",
     };
-    if (namedColors[color2.toLowerCase()]) {
-      rgb2 = hexToRgb(namedColors[color2.toLowerCase()]);
-    }
+    const hex = namedColors[color2.toLowerCase()];
+    if (hex) rgb2 = hexToRgb(hex);
   }
 
-  if (!rgb1 || !rgb2) return 1; // エラー時は最低値を返す
+  if (!rgb1 || !rgb2) return 1;
 
   const lum1 = calculateRelativeLuminance(rgb1.r, rgb1.g, rgb1.b);
   const lum2 = calculateRelativeLuminance(rgb2.r, rgb2.g, rgb2.b);
-
   const lighter = Math.max(lum1, lum2);
   const darker = Math.min(lum1, lum2);
 
   return (lighter + 0.05) / (darker + 0.05);
+}
+
+/**
+ * 要素の実際の背景色を取得する（親要素の背景色を考慮）
+ */
+function getEffectiveBackgroundColor(element: Element): string {
+  let currentElement = element as HTMLElement;
+  while (currentElement && currentElement !== document.body) {
+    const style = window.getComputedStyle(currentElement);
+    const bg = style.backgroundColor;
+    if (
+      bg &&
+      bg !== "rgba(0, 0, 0, 0)" &&
+      bg !== "transparent" &&
+      bg !== "initial" &&
+      bg !== "inherit"
+    ) {
+      return bg;
+    }
+    currentElement = currentElement.parentElement as HTMLElement;
+  }
+  return "rgb(255, 255, 255)";
+}
+
+/**
+ * コントラスト比チェック機能の妥当性を検証する
+ * 開発時のデバッグ用関数
+ */
+function validateContrastRatioImplementation(): boolean {
+  try {
+    const testCases = [
+      { color1: "rgb(0, 0, 0)", color2: "rgb(255, 255, 255)", expected: 21 },
+      { color1: "#000000", color2: "#ffffff", expected: 21 },
+      { color1: "rgb(255, 255, 255)", color2: "rgb(0, 0, 0)", expected: 21 },
+      {
+        color1: "rgb(128, 128, 128)",
+        color2: "rgb(255, 255, 255)",
+        expected: 3.95,
+      },
+    ];
+
+    for (const { color1, color2, expected } of testCases) {
+      const ratio = calculateContrastRatio(color1, color2);
+      if (Math.abs(ratio - expected) > 0.1) {
+        console.warn(
+          `コントラスト比検証失敗: ${color1} vs ${color2}, 期待: ${expected}, 実際: ${ratio.toFixed(
+            2
+          )}`
+        );
+        return false;
+      }
+    }
+    console.log("✅ コントラスト比計算の検証が成功しました");
+    return true;
+  } catch (e) {
+    console.error("コントラスト比検証中にエラー:", e);
+    return false;
+  }
 }
 
 /**
