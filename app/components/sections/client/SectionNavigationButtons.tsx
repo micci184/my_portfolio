@@ -28,11 +28,6 @@ export default function SectionNavigationButtons({
       // フォールバック：直接コールバックを実行
       onSectionChange(section);
     }
-      onSectionChange(section);
-    } catch (error) {
-      console.error("Error during section navigation:", error);
-      onSectionChange(section);
-    }
   };
 
   return (
