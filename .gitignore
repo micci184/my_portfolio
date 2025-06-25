@@ -36,4 +36,11 @@ yarn-error.log*
 
 # Build artifacts
 /tmp/
-tsconfig.tsbuildinfo 
+tsconfig.tsbuildinfo
+.swc/
+.turbo/
+.cache/
+
+# Build cache
+.next/cache/
+*.tsbuildinfo
