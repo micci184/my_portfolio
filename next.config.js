@@ -48,6 +48,74 @@ const nextConfig = {
     // サーバーコンポーネントの最適化
     serverMinification: true,
   },
+  // webpack設定のカスタマイズ
+  webpack: (config, { dev, isServer }) => {
+    // 開発環境でのキャッシュ設定
+    if (dev) {
+      config.cache = {
+        type: "filesystem",
+        buildDependencies: {
+          config: [__filename],
+        },
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7日間
+        name: isServer ? "server-development" : "client-development",
+      };
+    }
+
+    // 本番環境でのキャッシュ設定
+    if (!dev) {
+      config.cache = {
+        type: "filesystem",
+        compression: "gzip",
+        buildDependencies: {
+          config: [__filename],
+        },
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30日間
+        name: isServer ? "server-production" : "client-production",
+      };
+    }
+
+    // vendor-chunksの最適化
+    config.optimization = {
+      ...config.optimization,
+      splitChunks: {
+        chunks: "all",
+        cacheGroups: {
+          vendor: {
+            name: (module) => {
+              const packageName = module.context.match(
+                /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+              )?.[1];
+              if (!packageName) return null;
+
+              // 特定のパッケージをグループ化
+              if (packageName.includes("@radix-ui")) return "vendor-radix-ui";
+              if (packageName.includes("lucide-react")) return "vendor-lucide";
+              if (packageName.includes("class-variance-authority"))
+                return "vendor-cva";
+              if (packageName.includes("@floating-ui"))
+                return "vendor-floating-ui";
+
+              return `vendor-${packageName.replace("@", "")}`;
+            },
+            test: /[\\/]node_modules[\\/]/,
+            priority: 20,
+            reuseExistingChunk: true,
+          },
+          common: {
+            name: "common",
+            minChunks: 2,
+            priority: 10,
+            reuseExistingChunk: true,
+          },
+        },
+      },
+    };
+
+    return config;
+  },
+  // ビルド出力の最適化
+  output: "standalone",
 };
 
 module.exports = nextConfig;
