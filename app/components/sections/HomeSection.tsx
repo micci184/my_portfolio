@@ -17,7 +17,11 @@ const SectionNavigationButtons = dynamic(
 // スケルトンローディングコンポーネント
 function TerminalOutputSkeleton() {
   return (
-    <div className="terminal mx-auto mt-8 max-w-3xl md:mt-12 animate-pulse">
+    <div
+      className="terminal mx-auto mt-8 max-w-3xl md:mt-12 animate-pulse"
+      aria-busy="true"
+      aria-label="ターミナル出力をロード中"
+    >
       <div className="terminal-header">
         <div className="terminal-dot red"></div>
         <div className="terminal-dot yellow"></div>
@@ -34,7 +38,7 @@ function TerminalOutputSkeleton() {
   );
 }
 
-export default function HomeSection() {
+export function HomeSection() {
   // セクション変更のハンドラ関数（プロパティとして渡す）
   const handleSectionChange = (section: SectionId) => {
     // サーバーコンポーネントでは何もしない
@@ -54,14 +58,16 @@ export default function HomeSection() {
           </div>
 
           <div className="space-y-2 md:space-y-4">
-            <h1 className="font-heading text-primary">micci184</h1>
+            <h1 className="font-heading text-primary text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
+              micci184
+            </h1>
             <h2 className="text-3xl font-bold sm:text-4xl md:text-5xl lg:text-6xl">
               Full Stack Engineer
             </h2>
             <h3 className="text-xl font-semibold text-muted-foreground sm:text-2xl md:text-3xl">
               & Cloud Architect
             </h3>
-            <p className="mx-auto max-w-2xl text-base text-muted-foreground md:text-lg">
+            <p className="mx-auto max-w-2xl text-base text-foreground md:text-lg">
               Building scalable cloud solutions with cutting-edge technologies
             </p>
           </div>
@@ -74,3 +80,6 @@ export default function HomeSection() {
     </div>
   );
 }
+
+// デフォルトエクスポートから名前付きエクスポートに変更
+export default HomeSection;

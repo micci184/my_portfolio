@@ -87,9 +87,15 @@ export default function Sidebar({
         "relative flex h-screen flex-col border-r bg-card transition-all duration-300 ease-in-out",
         isCollapsed ? "w-20" : "w-64"
       )}
+      aria-label="サイトナビゲーション"
+      id={isMobile ? "mobile-sidebar" : "desktop-sidebar"}
     >
       <div className="flex flex-1 flex-col gap-y-4 overflow-y-auto p-4">
-        <nav className="flex flex-col gap-y-2">
+        <nav
+          className="flex flex-col gap-y-2"
+          role="navigation"
+          aria-label="メインナビゲーション"
+        >
           {navItems.map((item) => (
             <NavItem
               key={item.id}
@@ -108,6 +114,8 @@ export default function Sidebar({
             "flex items-center justify-center",
             isCollapsed ? "flex-col gap-y-4" : "gap-x-4"
           )}
+          role="list"
+          aria-label="ソーシャルリンク"
         >
           {socialItems.map((item) => (
             <SocialItem key={item.name} item={item} isCollapsed={isCollapsed} />
@@ -119,9 +127,15 @@ export default function Sidebar({
             size="icon"
             className="h-10 w-10"
             onClick={() => setIsCollapsed(!isCollapsed)}
+            aria-pressed={isCollapsed}
+            aria-label={
+              isCollapsed ? "サイドバーを展開" : "サイドバーを折りたたむ"
+            }
           >
             {isCollapsed ? <PanelRightClose /> : <PanelLeftClose />}
-            <span className="sr-only">Toggle sidebar</span>
+            <span className="sr-only">
+              {isCollapsed ? "サイドバーを展開" : "サイドバーを折りたたむ"}
+            </span>
           </Button>
         )}
       </div>
@@ -141,6 +155,7 @@ function NavItem({ item, activeSection, onClick, isCollapsed }: NavItemProps) {
               variant={isActive ? "default" : "ghost"}
               className="h-12 w-12"
               aria-label={item.label}
+              aria-current={isActive ? "page" : undefined}
             >
               <item.icon className="h-6 w-6" />
             </Button>
@@ -158,6 +173,7 @@ function NavItem({ item, activeSection, onClick, isCollapsed }: NavItemProps) {
       onClick={onClick}
       variant={isActive ? "default" : "ghost"}
       className="h-12 w-full justify-start gap-x-4 px-4"
+      aria-current={isActive ? "page" : undefined}
     >
       <item.icon className="h-6 w-6" />
       <span>{item.label}</span>
@@ -182,6 +198,8 @@ function SocialItem({
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground transition-colors hover:text-foreground"
+              aria-label={`${item.name}を開く（新しいタブ）`}
+              role="listitem"
             >
               <item.icon className="h-5 w-5" />
               <span className="sr-only">{item.name}</span>
@@ -199,6 +217,8 @@ function SocialItem({
       target="_blank"
       rel="noopener noreferrer"
       className="text-muted-foreground transition-colors hover:text-foreground"
+      aria-label={`${item.name}を開く（新しいタブ）`}
+      role="listitem"
     >
       <item.icon className="h-5 w-5" />
       <span className="sr-only">{item.name}</span>
