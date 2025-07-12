@@ -103,32 +103,41 @@ export default function TerminalOutput({
   };
 
   return (
-    <div className="terminal mx-auto mt-8 max-w-3xl md:mt-12">
-      <div className="terminal-header">
-        <div className="terminal-dot red"></div>
-        <div className="terminal-dot yellow"></div>
-        <div className="terminal-dot green"></div>
+    <div
+      className="terminal mx-auto mt-8 max-w-3xl md:mt-12"
+      role="region"
+      aria-label="ターミナル出力"
+    >
+      <div className="terminal-header" role="presentation">
+        <div className="terminal-dot red" aria-hidden="true"></div>
+        <div className="terminal-dot yellow" aria-hidden="true"></div>
+        <div className="terminal-dot green" aria-hidden="true"></div>
         <span className="text-gray-400 text-sm ml-4">
           micci184@cloud-workstation
         </span>
         {!isAnimationComplete && !isSkipped && (
           <button
             onClick={handleSkip}
-            className="ml-auto mr-2 px-2 py-1 text-xs text-gray-400 hover:text-gray-200 transition-colors rounded"
+            className="ml-auto mr-2 px-2 py-1 text-xs text-gray-400 hover:text-gray-200 transition-colors rounded focus:outline-none focus:ring-2 focus:ring-primary"
             aria-label="アニメーションをスキップしてすべてのターミナル出力を表示"
           >
             ⏩ Skip
           </button>
         )}
       </div>
-      <div className="p-4 space-y-2 text-left">
+      <div
+        className="p-4 space-y-2 text-left"
+        role="log"
+        aria-live="polite"
+        aria-atomic="false"
+      >
         {terminalLines.map((line, index) => (
           <div key={index} className="text-xs sm:text-sm">
             <span className={getLineStyle(line)}>{line}</span>
           </div>
         ))}
         {isAnimationComplete && (
-          <div className="flex items-center">
+          <div className="flex items-center" aria-hidden="true">
             <span className="text-primary-foreground dark:text-primary">
               ${" "}
             </span>

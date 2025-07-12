@@ -34,6 +34,26 @@ export default function Portfolio() {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
+  useEffect(() => {
+    const portfolioElement = document.getElementById("portfolio");
+    if (portfolioElement) {
+      const handleSectionChange = (event: Event) => {
+        const customEvent = event as CustomEvent<{ section: SectionId }>;
+        setActiveSection(customEvent.detail.section);
+        if (isMobile) {
+          setIsSidebarOpen(false);
+        }
+      };
+      portfolioElement.addEventListener("changeSection", handleSectionChange);
+      return () => {
+        portfolioElement.removeEventListener(
+          "changeSection",
+          handleSectionChange
+        );
+      };
+    }
+  }, [isMobile]);
+
   const handleSectionChange = (section: SectionId) => {
     setActiveSection(section);
     if (isMobile) {
@@ -64,6 +84,7 @@ export default function Portfolio() {
             isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
           )}
           onClick={() => setIsSidebarOpen(false)}
+          aria-hidden="true"
         />
       )}
       <div
@@ -80,6 +101,8 @@ export default function Portfolio() {
           "relative flex-1 transition-all duration-300 ease-in-out",
           !isMobile && (isSidebarCollapsed ? "md:ml-20" : "md:ml-64")
         )}
+        role="main"
+        aria-label="ポートフォリオコンテンツ"
       >
         <div className="absolute right-4 top-4 z-50 flex items-center gap-2 sm:right-6 sm:top-6">
           <ThemeToggle />
@@ -89,17 +112,25 @@ export default function Portfolio() {
               size="icon"
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className="rounded-full"
+              aria-expanded={isSidebarOpen}
+              aria-controls="mobile-sidebar"
+              aria-label={
+                isSidebarOpen ? "サイドバーを閉じる" : "サイドバーを開く"
+              }
             >
               {isSidebarOpen ? <X /> : <Menu />}
               <span className="sr-only">
-                {isSidebarOpen ? "Close sidebar" : "Open sidebar"}
+                {isSidebarOpen ? "サイドバーを閉じる" : "サイドバーを開く"}
               </span>
             </Button>
           )}
         </div>
         <Content activeSection={activeSection} />
         {/* Background Effects */}
-        <div className="pointer-events-none absolute inset-0 -z-10">
+        <div
+          className="pointer-events-none absolute inset-0 -z-10"
+          aria-hidden="true"
+        >
           <div className="absolute right-1/4 top-1/4 h-72 w-72 animate-pulse-slow rounded-full bg-primary/10 blur-3xl"></div>
           <div className="delay-2000 absolute bottom-1/4 left-1/4 h-72 w-72 animate-pulse-slow rounded-full bg-secondary/10 blur-3xl"></div>
         </div>
