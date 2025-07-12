@@ -33,13 +33,22 @@ export default function Content({ activeSection }: ContentProps) {
 
       // スクリーンリーダーのためのフォーカス管理
       const focusableElement = sectionElement.querySelector(
-        'button, [tabindex="0"]'
+        'button, [tabindex="0"], input, select, textarea, [href]'
       );
       if (focusableElement instanceof HTMLElement) {
-        // タイマーを設定してスクロールが完了した後にフォーカスを移動
-        setTimeout(() => {
-          focusableElement.focus();
-        }, 500);
+        // スクロールアニメーションの完了を監視
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                focusableElement.focus();
+                observer.disconnect();
+              }
+            });
+          },
+          { threshold: 0.8 }
+        );
+        observer.observe(sectionElement);
       }
     }
   }, [activeSection]);
@@ -58,8 +67,8 @@ export default function Content({ activeSection }: ContentProps) {
           id={id}
           className="h-screen snap-center pt-24"
           aria-label={label}
-          tabIndex={activeSection === id ? 0 : -1}
-          aria-hidden={activeSection !== id}
+          tabIndex={0}
+          aria-current={activeSection === id ? "true" : "false"}
         >
           <Component />
         </section>
