@@ -66,6 +66,22 @@
     overflow-x: hidden;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+
+  /* フォントファミリーの設定 */
+  :root {
+    --font-family-sans: var(--font-sans), sans-serif;
+    --font-family-mono: var(--font-jetbrains), var(--font-noto-mono), monospace;
+  }
+
+  /* 基本フォント設定 */
+  html {
+    font-family: var(--font-family-sans);
+  }
+
+  /* コード要素のフォント設定 */
+  code, pre, kbd, samp {
+    font-family: var(--font-family-mono);
+  }
 }
 
 @layer components {

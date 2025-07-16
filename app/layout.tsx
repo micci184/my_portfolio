@@ -1,12 +1,13 @@
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
-import { Inter as FontSans, JetBrains_Mono } from "next/font/google";
+import { Noto_Sans_JP as FontSans, JetBrains_Mono, Noto_Sans_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
 
 // フォント読み込みの最適化
 const fontSans = FontSans({
   subsets: ["latin"],
+  weight: ["400", "500", "700"],
   variable: "--font-sans",
   display: "swap", // テキストの早期表示のためにswapを使用
   preload: true,
@@ -14,14 +15,30 @@ const fontSans = FontSans({
   adjustFontFallback: true, // フォントフォールバックの自動調整
 });
 
-const fontMono = JetBrains_Mono({
+// 英語用モノスペースフォント
+const jetBrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-mono",
+  variable: "--font-jetbrains",
   display: "swap",
   preload: true,
-  fallback: ["monospace"],
   adjustFontFallback: true,
 });
+
+// 日本語対応モノスペースフォント
+const notoSansMono = Noto_Sans_Mono({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-noto-mono",
+  display: "swap",
+  preload: true,
+  adjustFontFallback: true,
+});
+
+// モノスペースフォント変数の統合
+const fontMono = {
+  variable: "--font-mono",
+  className: `${jetBrainsMono.variable} ${notoSansMono.variable}`,
+};
 
 // 環境変数またはデフォルト値からサイトURLを取得
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://micci184.dev";
@@ -103,7 +120,7 @@ export default function RootLayout({
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
           fontSans.variable,
-          fontMono.variable
+          fontMono.className
         )}
       >
         <ThemeProvider
