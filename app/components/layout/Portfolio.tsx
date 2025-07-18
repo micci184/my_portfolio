@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import Sidebar from "./Sidebar";
 import Content from "./Content";
 import { ThemeToggle } from "../../../components/theme-toggle";
 import { Button } from "../../../components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu } from "lucide-react";
 import { cn } from "../../../lib/utils";
+import { useMediaQuery } from "../hooks/useMediaQuery";
 
 export type SectionId =
   | "home"
@@ -19,20 +20,17 @@ export default function Portfolio() {
   const [activeSection, setActiveSection] = useState<SectionId>("home");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // For mobile overlay
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true); // For desktop collapse
-  const [isMobile, setIsMobile] = useState(false);
-
+  
+  // useMediaQueryフックを使用して、メディアクエリの変更を監視
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isTablet = useMediaQuery('(max-width: 1024px)');
+  
+  // モバイル表示時にサイドバーを閉じる
   useEffect(() => {
-    const checkScreenSize = () => {
-      const mobile = window.innerWidth < 768;
-      setIsMobile(mobile);
-      if (mobile) {
-        setIsSidebarOpen(false);
-      }
-    };
-    checkScreenSize();
-    window.addEventListener("resize", checkScreenSize);
-    return () => window.removeEventListener("resize", checkScreenSize);
-  }, []);
+    if (isMobile) {
+      setIsSidebarOpen(false);
+    }
+  }, [isMobile]);
 
   useEffect(() => {
     const portfolioElement = document.getElementById("portfolio");
@@ -76,7 +74,7 @@ export default function Portfolio() {
         <Sidebar {...sidebarProps} isCollapsed={isSidebarCollapsed} />
       </div>
 
-      {/* Mobile Sidebar Overlay */}
+      {/* Mobile Sidebar Overlay - モバイル表示時のオーバーレイ */}
       {isMobile && (
         <div
           className={cn(
@@ -87,14 +85,15 @@ export default function Portfolio() {
           aria-hidden="true"
         />
       )}
-      <div
-        className={cn(
-          "fixed left-0 top-0 z-40 h-full transition-transform duration-300 ease-in-out",
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        )}
-      >
-        <Sidebar {...sidebarProps} isCollapsed={false} />
-      </div>
+      
+      {/* モバイルサイドバー - 表示時のみレンダリング */}
+      {isMobile && isSidebarOpen && (
+        <div
+          className="fixed left-0 top-0 z-40 h-full transition-transform duration-300 ease-in-out translate-x-0"
+        >
+          <Sidebar {...sidebarProps} isCollapsed={false} />
+        </div>
+      )}
 
       <main
         className={cn(
@@ -104,35 +103,41 @@ export default function Portfolio() {
         role="main"
         aria-label="ポートフォリオコンテンツ"
       >
-        <div className="absolute right-4 top-4 z-50 flex items-center gap-2 sm:right-6 sm:top-6">
+        <div className="absolute right-4 top-4 z-50 flex items-center gap-3 sm:right-6 sm:top-6">
           <ThemeToggle />
           {isMobile && (
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="rounded-full"
+              className="h-12 w-12 rounded-full" // タッチターゲットサイズを大きく
               aria-expanded={isSidebarOpen}
               aria-controls="mobile-sidebar"
               aria-label={
                 isSidebarOpen ? "サイドバーを閉じる" : "サイドバーを開く"
               }
             >
-              {isSidebarOpen ? <X /> : <Menu />}
+              <Menu className="h-6 w-6" />
               <span className="sr-only">
                 {isSidebarOpen ? "サイドバーを閉じる" : "サイドバーを開く"}
               </span>
             </Button>
           )}
         </div>
+        
+        {/* コンテンツセクション */}
         <Content activeSection={activeSection} />
-        {/* Background Effects */}
+        
+        {/* 背景エフェクト - モバイルではエフェクトを簡素化 */}
         <div
           className="pointer-events-none absolute inset-0 -z-10"
           aria-hidden="true"
         >
-          <div className="absolute right-1/4 top-1/4 h-72 w-72 animate-pulse-slow rounded-full bg-primary/10 blur-3xl"></div>
-          <div className="delay-2000 absolute bottom-1/4 left-1/4 h-72 w-72 animate-pulse-slow rounded-full bg-secondary/10 blur-3xl"></div>
+          {/* モバイルでは小さく、エフェクトを簡素化 */}
+          <div className={`absolute right-1/4 top-1/4 ${isMobile ? 'h-48 w-48' : 'h-72 w-72'} animate-pulse-slow rounded-full bg-primary/10 blur-3xl`}></div>
+          {!isMobile && (
+            <div className="delay-2000 absolute bottom-1/4 left-1/4 h-72 w-72 animate-pulse-slow rounded-full bg-secondary/10 blur-3xl"></div>
+          )}
         </div>
       </main>
     </div>
