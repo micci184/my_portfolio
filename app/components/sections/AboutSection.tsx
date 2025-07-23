@@ -1,59 +1,7 @@
 import { Cloud, Server, Shield, Cpu } from "lucide-react";
+import { cloudSkills } from "@/app/data/skills";
 
-interface SkillGroup {
-  category: string;
-  skills: string[];
-}
-
-export default function AboutSection() {
-  const cloudSkills: SkillGroup[] = [
-    {
-      category: "AWS Services",
-      skills: [
-        "EC2",
-        "ECS",
-        "Lambda",
-        "S3",
-        "RDS",
-        "CloudFormation",
-        "CloudWatch",
-        "API Gateway",
-      ],
-    },
-    {
-      category: "Google Cloud",
-      skills: [
-        "Compute Engine",
-        "Cloud Run",
-        "BigQuery",
-        "Cloud Storage",
-        "Pub/Sub",
-        "Cloud Functions",
-      ],
-    },
-    {
-      category: "DevOps & Infrastructure",
-      skills: [
-        "Docker",
-        "Kubernetes",
-        "Terraform",
-        "Ansible",
-        "Jenkins",
-        "GitHub Actions",
-      ],
-    },
-    {
-      category: "Monitoring & Security",
-      skills: [
-        "Prometheus",
-        "Grafana",
-        "ELK Stack",
-        "AWS IAM",
-        "Cloud Security",
-        "Network Security",
-      ],
-    },
-  ];
+export function AboutSection() {
 
   return (
     <div className="flex h-full w-full items-center justify-center p-4 sm:p-6 md:p-8">

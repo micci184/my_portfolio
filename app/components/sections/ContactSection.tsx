@@ -1,47 +1,8 @@
-import {
-  Mail,
-  Download,
-  Github,
-  Twitter,
-  Linkedin,
-  Instagram,
-} from "lucide-react";
+import { Mail, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { socialItems } from "@/app/data/social";
 
-interface SocialItem {
-  name: string;
-  icon: React.ElementType;
-  href: string;
-  color: string;
-}
-
-export default function ContactSection() {
-  const socialItems: SocialItem[] = [
-    {
-      name: "GitHub",
-      icon: Github,
-      href: "https://github.com/micci184",
-      color: "#333",
-    },
-    {
-      name: "Twitter",
-      icon: Twitter,
-      href: "https://twitter.com/micci184",
-      color: "#1DA1F2",
-    },
-    {
-      name: "LinkedIn",
-      icon: Linkedin,
-      href: "https://linkedin.com/in/micci184",
-      color: "#0077B5",
-    },
-    {
-      name: "Instagram",
-      icon: Instagram,
-      href: "https://instagram.com/micci184",
-      color: "#E4405F",
-    },
-  ];
+export function ContactSection() {
 
   return (
     <div className="flex h-full w-full items-center justify-center p-4 pb-20 sm:p-6 md:p-8 md:pb-8">

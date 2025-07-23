@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
-import Content from "./Content";
+import { Content } from "./Content";
 import { ThemeToggle } from "../../../components/theme-toggle";
 import { Button } from "../../../components/ui/button";
 import { Menu, X } from "lucide-react";

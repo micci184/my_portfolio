@@ -1,18 +1,9 @@
-import dynamic from "next/dynamic";
+import { Suspense } from "react";
 import { SectionId } from "../layout/Portfolio";
 
-// クライアントコンポーネントを動的インポート（レイジーロード）
-const TerminalOutput = dynamic(() => import("./client/TerminalOutput"), {
-  ssr: false, // クライアントサイドでのみレンダリング
-  loading: () => <TerminalOutputSkeleton />, // ローディング中に表示するスケルトン
-});
-
-const SectionNavigationButtons = dynamic(
-  () => import("./client/SectionNavigationButtons"),
-  {
-    ssr: true, // SSRでプリレンダリング
-  }
-);
+// クライアントコンポーネントを動的インポート
+import TerminalOutput from "./client/TerminalOutput";
+import SectionNavigationButtons from "./client/SectionNavigationButtons";
 
 // スケルトンローディングコンポーネント
 function TerminalOutputSkeleton() {
@@ -34,12 +25,9 @@ function TerminalOutputSkeleton() {
   );
 }
 
-export default function HomeSection() {
-  // セクション変更のハンドラ関数（プロパティとして渡す）
-  const handleSectionChange = (section: SectionId) => {
-    // サーバーコンポーネントでは何もしない
-    // 実際の処理はクライアントコンポーネントで行う
-  };
+export function HomeSection() {
+  // サーバーコンポーネントではハンドラ関数は不要
+  // 実際の処理はクライアントコンポーネントで行う
 
   return (
     <div className="flex h-full w-full items-center justify-center p-4">
@@ -67,9 +55,11 @@ export default function HomeSection() {
           </div>
         </div>
 
-        <SectionNavigationButtons onSectionChange={handleSectionChange} />
+        <SectionNavigationButtons onSectionChange={() => {}} />
 
-        <TerminalOutput />
+        <Suspense fallback={<TerminalOutputSkeleton />}>
+          <TerminalOutput />
+        </Suspense>
       </div>
     </div>
   );
