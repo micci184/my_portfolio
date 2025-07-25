@@ -7,104 +7,119 @@ export interface Project {
   live: string;
   image: string;
   featured: boolean;
-  // 新しいフィールド
   period?: string; // プロジェクト期間
-  role?: string; // 担当した役割
-  achievements?: string[]; // 成果・実績
-  category?: string[]; // プロジェクトカテゴリ
-  images?: string[]; // 追加の画像（スライドショー用）
+  role?: string;  // プロジェクトでの役割
 }
 
 export const projects: Project[] = [
   {
     id: 1,
-    title: "Cloud-Native E-commerce Platform",
+    title: "金融システムクラウド移行プロジェクト",
     description:
-      "Scalable microservices architecture deployed on AWS with auto-scaling, load balancing, and multi-region deployment. Handles 100K+ concurrent users with 99.9% uptime.",
+      "大規模金融機関のオンプレミスシステムをAWSへ移行するプロジェクト。マルチAZ構成、自動スケーリング、ロードバランシングを実装し、災害対策としてマルチリージョン構成を採用。99.99%の可用性と40%のコスト削減を実現。",
     tech: [
       "AWS",
-      "Kubernetes",
-      "Docker",
-      "React",
-      "Node.js",
-      "PostgreSQL",
-      "Redis",
+      "EC2",
+      "RDS Aurora",
+      "ELB",
+      "CloudFormation",
+      "Lambda",
+      "CloudWatch",
+      "Route53",
       "Terraform",
+      "Ansible",
     ],
-    github: "https://github.com/micci184/ecommerce-platform",
-    live: "https://ecommerce-platform.vercel.app",
-    image: "/images/projects/ecommerce-platform.webp",
+    github: "https://github.com/micci184/financial-cloud-migration",
+    live: "https://case-study.micci184.dev/financial-cloud",
+    image: "/images/projects/financial-cloud.webp",
     featured: true,
-    period: "2024年1月 - 2024年6月",
-    role: "テックリード・クラウドアーキテクト",
-    achievements: [
-      "マイクロサービスアーキテクチャの設計と実装",
-      "AWS EKSを活用したKubernetesクラスタの構築",
-      "CI/CDパイプラインの構築によるデプロイ時間の80%削減",
-      "99.9%の可用性を実現するマルチリージョン構成の設計"
-    ],
-    category: ["クラウド", "マイクロサービス", "DevOps"],
-    images: [
-      "/images/projects/ecommerce-platform.webp",
-      "/images/projects/ecommerce-platform-2.webp",
-      "/images/projects/ecommerce-platform-3.webp"
-    ]
+    period: "2023年4月 - 2024年3月",
+    role: "インフラアーキテクト",
   },
   {
     id: 2,
-    title: "AI-Powered Analytics Dashboard",
+    title: "マイクロサービスベースのフィンテックアプリ",
     description:
-      "Real-time analytics platform using Google Cloud ML APIs, BigQuery for data processing, and React for visualization. Processes 1M+ events daily with machine learning insights.",
+      "Kubernetes上で動作するマイクロサービスアーキテクチャを採用したフィンテックアプリケーション。CI/CDパイプラインの自動化、ブルー/グリーンデプロイメント、カナリアリリースを実装。デプロイ時間を30分から5分に短縮。",
     tech: [
-      "Google Cloud",
-      "BigQuery",
-      "Cloud Functions",
-      "React",
-      "Python",
-      "TensorFlow",
+      "Kubernetes",
       "Docker",
+      "Go",
+      "gRPC",
+      "PostgreSQL",
+      "Redis",
+      "Istio",
+      "Prometheus",
+      "Grafana",
+      "GitHub Actions",
     ],
-    github: "https://github.com/micci184/analytics-dashboard",
-    live: "https://analytics-dashboard.com",
-    image: "/images/projects/analytics-dashboard.webp",
+    github: "https://github.com/micci184/fintech-microservices",
+    live: "https://fintech-demo.micci184.dev",
+    image: "/images/projects/fintech-app.webp",
     featured: true,
-    period: "2023年8月 - 2024年2月",
-    role: "フルスタックエンジニア・MLエンジニア",
-    achievements: [
-      "BigQueryとCloud Functionsを活用したリアルタイムデータパイプラインの構築",
-      "TensorFlowを使用した予測モデルの開発と実装",
-      "Reactによる直感的なダッシュボードUIの設計と実装",
-      "データ処理時間を従来の1/10に短縮"
-    ],
-    category: ["AI/ML", "データ分析", "クラウド"],
-    images: [
-      "/images/projects/analytics-dashboard.webp",
-      "/images/projects/analytics-dashboard-2.webp",
-      "/images/projects/analytics-dashboard-3.webp"
-    ]
+    period: "2022年10月 - 2023年6月",
+    role: "DevOpsエンジニア",
   },
   {
     id: 3,
-    title: "Infrastructure as Code Template",
+    title: "ECサイトフロントエンド最適化",
     description:
-      "Complete Terraform modules for AWS infrastructure deployment. Includes VPC setup, EKS cluster, RDS, monitoring, and security configurations with best practices.",
-    tech: ["Terraform", "AWS", "Kubernetes", "Helm", "Prometheus", "Grafana"],
+      "大規模ECサイトのフロントエンド改善プロジェクト。React、TypeScriptを使用したコンポーネント設計とパフォーマンス最適化により、ページ読み込み速度を60%改善。アクセシビリティ対応とレスポンシブデザインの実装。",
+    tech: [
+      "React", 
+      "TypeScript", 
+      "Next.js", 
+      "Tailwind CSS", 
+      "Jest", 
+      "React Testing Library", 
+      "Storybook"
+    ],
+    github: "https://github.com/micci184/ecommerce-frontend",
+    live: "https://ecommerce-demo.micci184.dev",
+    image: "/images/projects/ecommerce-frontend.webp",
+    featured: true,
+    period: "2022年5月 - 2022年9月",
+    role: "フロントエンドエンジニア",
+  },
+  {
+    id: 4,
+    title: "インフラ監視ダッシュボード",
+    description:
+      "複数のクラウド環境を一元監視するダッシュボードシステム。Prometheus、Grafanaを活用したメトリクス収集と可視化、アラート自動化を実装。障害検知時間を平均15分短縮し、システム全体の安定性を向上。",
+    tech: [
+      "Prometheus", 
+      "Grafana", 
+      "Alertmanager", 
+      "Node Exporter", 
+      "AWS CloudWatch", 
+      "Google Cloud Monitoring", 
+      "Slack API"
+    ],
+    github: "https://github.com/micci184/monitoring-dashboard",
+    live: "https://monitoring-demo.micci184.dev",
+    image: "/images/projects/monitoring-dashboard.webp",
+    featured: false,
+    period: "2022年1月 - 2022年4月",
+    role: "SREエンジニア",
+  },
+  {
+    id: 5,
+    title: "Infrastructure as Code テンプレート",
+    description:
+      "AWSインフラをコードで管理するためのTerraformモジュールセット。VPC、EKS、RDS、監視、セキュリティ設定など、ベストプラクティスに基づいた構成を提供。複数環境での一貫したインフラ構築を実現。",
+    tech: [
+      "Terraform", 
+      "AWS", 
+      "CloudFormation", 
+      "GitHub Actions", 
+      "Terratest", 
+      "Checkov"
+    ],
     github: "https://github.com/micci184/aws-terraform-modules",
     live: "https://terraform-modules.micci184.dev",
     image: "/images/projects/terraform-modules.webp",
     featured: false,
-    period: "2023年5月 - 2023年7月",
-    role: "インフラエンジニア・DevOpsエンジニア",
-    achievements: [
-      "再利用可能なTerraformモジュールの設計と実装",
-      "セキュリティベストプラクティスに準拠したAWSリソース構成の自動化",
-      "インフラのプロビジョニング時間を90%削減",
-      "Prometheusとgrafanaを活用した包括的なモニタリングシステムの構築"
-    ],
-    category: ["DevOps", "インフラ", "クラウド"],
-    images: [
-      "/images/projects/terraform-modules.webp",
-      "/images/projects/terraform-modules-2.webp"
-    ]
+    period: "2021年8月 - 2021年12月",
+    role: "クラウドエンジニア",
   },
 ];
