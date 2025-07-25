@@ -13,7 +13,6 @@ import {
   Send,
   PanelLeftClose,
   PanelRightClose,
-  X,
 } from "lucide-react";
 import { SectionId } from "./Portfolio";
 import {
@@ -60,11 +59,11 @@ export default function Sidebar({
   isMobile,
 }: SidebarProps) {
   const navItems: NavItemData[] = [
-    { id: "home", label: "Home", icon: Home },
-    { id: "about", label: "About", icon: User },
-    { id: "experience", label: "Experience", icon: Briefcase },
-    { id: "projects", label: "Projects", icon: FolderGit2 },
-    { id: "contact", label: "Contact", icon: Send },
+    { id: "home", label: "ホーム", icon: Home },
+    { id: "about", label: "自己紹介", icon: User },
+    { id: "experience", label: "経歴", icon: Briefcase },
+    { id: "projects", label: "プロジェクト", icon: FolderGit2 },
+    { id: "contact", label: "お問い合わせ", icon: Send },
   ];
 
   const socialItems: SocialItem[] = [
@@ -86,74 +85,57 @@ export default function Sidebar({
     <aside
       className={cn(
         "relative flex h-screen flex-col border-r bg-card transition-all duration-300 ease-in-out",
-        isCollapsed ? "w-20" : isMobile ? "w-full" : "w-64" // モバイルでは全幅表示
+        isCollapsed ? "w-20" : "w-64"
       )}
-      aria-label="サイトナビゲーション"
-      id={isMobile ? "mobile-sidebar" : "desktop-sidebar"}
+      aria-label="サイドバーナビゲーション"
+      role="navigation"
     >
-      {/* モバイル用ヘッダー */}
-      {isMobile && (
-        <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="text-xl font-bold">Menu</h2>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-10 w-10 rounded-full"
-            onClick={() => setIsCollapsed(true)}
-            aria-label="メニューを閉じる"
-          >
-            <X className="h-6 w-6" />
-            <span className="sr-only">メニューを閉じる</span>
-          </Button>
-        </div>
-      )}
-      
-      <div className="flex flex-1 flex-col gap-y-6 overflow-y-auto p-4">
-        <nav
-          className="flex flex-col gap-y-3" // 間隔を広げて操作性を向上
-          role="navigation"
-          aria-label="メインナビゲーション"
-        >
-          {navItems.map((item) => (
-            <NavItem
-              key={item.id}
-              item={item}
-              activeSection={activeSection}
-              isCollapsed={isCollapsed}
-              onClick={() => setActiveSection(item.id)}
-            />
-          ))}
+      <div className="flex flex-1 flex-col gap-y-4 overflow-y-auto p-4">
+        <nav className="flex flex-col gap-y-2" aria-label="メインナビゲーション">
+          <ul className="list-none p-0 m-0 flex flex-col gap-y-2">
+            {navItems.map((item) => (
+              <li key={item.id}>
+                <NavItem
+                  item={item}
+                  activeSection={activeSection}
+                  isCollapsed={isCollapsed}
+                  onClick={() => setActiveSection(item.id)}
+                />
+              </li>
+            ))}
+          </ul>
         </nav>
       </div>
 
-      <div className="mt-auto flex flex-col items-center gap-y-6 p-4 pb-6"> {/* 下部のパディングを増やし、間隔を広げる */}
+      <div className="mt-auto flex flex-col items-center gap-y-4 p-4">
         <div
           className={cn(
             "flex items-center justify-center",
-            isCollapsed ? "flex-col gap-y-6" : isMobile ? "gap-x-6" : "gap-x-4" // モバイルでは間隔を広げる
+            isCollapsed ? "flex-col gap-y-4" : "gap-x-4"
           )}
-          role="list"
-          aria-label="ソーシャルリンク"
         >
-          {socialItems.map((item) => (
-            <SocialItem key={item.name} item={item} isCollapsed={isCollapsed} />
-          ))}
+          <ul className={cn(
+            "list-none p-0 m-0 flex items-center", 
+            isCollapsed ? "flex-col gap-y-4" : "gap-x-4"
+          )} aria-label="ソーシャルリンク">
+            {socialItems.map((item) => (
+              <li key={item.name}>
+                <SocialItem item={item} isCollapsed={isCollapsed} />
+              </li>
+            ))}
+          </ul>
         </div>
         {!isMobile && (
           <Button
             variant="ghost"
             size="icon"
-            className="h-12 w-12 rounded-full" // タッチターゲットサイズを大きく
+            className="h-10 w-10 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
             onClick={() => setIsCollapsed(!isCollapsed)}
             aria-pressed={isCollapsed}
-            aria-label={
-              isCollapsed ? "サイドバーを展開" : "サイドバーを折りたたむ"
-            }
+            aria-label={isCollapsed ? "サイドバーを展開" : "サイドバーを折りたたむ"}
           >
-            {isCollapsed ? <PanelRightClose className="h-5 w-5" /> : <PanelLeftClose className="h-5 w-5" />}
-            <span className="sr-only">
-              {isCollapsed ? "サイドバーを展開" : "サイドバーを折りたたむ"}
-            </span>
+            {isCollapsed ? <PanelRightClose aria-hidden="true" /> : <PanelLeftClose aria-hidden="true" />}
+            <span className="sr-only">{isCollapsed ? "サイドバーを展開" : "サイドバーを折りたたむ"}</span>
           </Button>
         )}
       </div>
@@ -171,14 +153,15 @@ function NavItem({ item, activeSection, onClick, isCollapsed }: NavItemProps) {
             <Button
               onClick={onClick}
               variant={isActive ? "default" : "ghost"}
-              className="h-14 w-14 rounded-xl" // タッチターゲットサイズを大きくし、角を丸くする
+              className="h-12 w-12 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               aria-label={item.label}
               aria-current={isActive ? "page" : undefined}
+              role="link"
             >
-              <item.icon className="h-6 w-6" />
+              <item.icon className="h-6 w-6" aria-hidden="true" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="right" className="ml-2">
+          <TooltipContent side="right" className="ml-2" role="tooltip">
             {item.label}
           </TooltipContent>
         </Tooltip>
@@ -190,10 +173,11 @@ function NavItem({ item, activeSection, onClick, isCollapsed }: NavItemProps) {
     <Button
       onClick={onClick}
       variant={isActive ? "default" : "ghost"}
-      className="h-14 w-full justify-start gap-x-4 px-4 rounded-xl text-base" // タッチターゲットサイズを大きくし、角を丸くし、フォントサイズを大きく
+      className="h-12 w-full justify-start gap-x-4 px-4 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
       aria-current={isActive ? "page" : undefined}
+      role="link"
     >
-      <item.icon className="h-6 w-6" />
+      <item.icon className="h-6 w-6" aria-hidden="true" />
       <span>{item.label}</span>
     </Button>
   );
@@ -215,15 +199,14 @@ function SocialItem({
               href={item.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-full text-muted-foreground transition-colors hover:text-foreground hover:bg-muted" // タッチターゲットサイズを大きくし、ホバー時の視認性を向上
-              aria-label={`${item.name}を開く（新しいタブ）`}
-              role="listitem"
+              className="text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md p-1"
+              aria-label={`${item.name}（新しいウィンドウで開く）`}
             >
-              <item.icon className="h-6 w-6" /> {/* アイコンサイズを大きく */}
+              <item.icon className="h-5 w-5" aria-hidden="true" />
               <span className="sr-only">{item.name}</span>
             </a>
           </TooltipTrigger>
-          <TooltipContent side="right">{item.name}</TooltipContent>
+          <TooltipContent side="right" role="tooltip">{item.name}</TooltipContent>
         </Tooltip>
       </TooltipProvider>
     );
@@ -234,11 +217,10 @@ function SocialItem({
       href={item.href}
       target="_blank"
       rel="noopener noreferrer"
-      className="p-2 rounded-full text-muted-foreground transition-colors hover:text-foreground hover:bg-muted" // タッチターゲットサイズを大きくし、ホバー時の視認性を向上
-      aria-label={`${item.name}を開く（新しいタブ）`}
-      role="listitem"
+      className="text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md p-1"
+      aria-label={`${item.name}（新しいウィンドウで開く）`}
     >
-      <item.icon className="h-6 w-6" /> {/* アイコンサイズを大きく */}
+      <item.icon className="h-5 w-5" aria-hidden="true" />
       <span className="sr-only">{item.name}</span>
     </a>
   );
