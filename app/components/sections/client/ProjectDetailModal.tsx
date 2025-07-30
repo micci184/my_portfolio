@@ -20,7 +20,8 @@ export default function ProjectDetailModal({ project, open, onOpenChange }: Proj
 
   if (!project) return null;
 
-  const images = project.images || [project.image];
+  // Project型にはimagesプロパティが存在しないため、常にproject.imageを配列として扱う
+  const images = [project.image];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -72,17 +73,7 @@ export default function ProjectDetailModal({ project, open, onOpenChange }: Proj
             <p className='mt-1'>{project.description}</p>
           </div>
 
-          {/* 成果 */}
-          {project.achievements && project.achievements.length > 0 && (
-            <div>
-              <h3 className='text-sm font-medium text-muted-foreground'>主な成果</h3>
-              <ul className='list-disc pl-5 mt-1 space-y-1'>
-                {project.achievements.map((achievement, index) => (
-                  <li key={index}>{achievement}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+          {/* 成果セクションは削除 - Project型からachievementsプロパティが削除されたため */}
 
           {/* 使用技術 */}
           <div>
@@ -94,17 +85,7 @@ export default function ProjectDetailModal({ project, open, onOpenChange }: Proj
             </div>
           </div>
 
-          {/* カテゴリ */}
-          {project.category && project.category.length > 0 && (
-            <div>
-              <h3 className='text-sm font-medium text-muted-foreground'>カテゴリ</h3>
-              <div className='flex flex-wrap gap-2 mt-2'>
-                {project.category.map((cat) => (
-                  <Badge key={cat} variant='secondary'>{cat}</Badge>
-                ))}
-              </div>
-            </div>
-          )}
+          {/* カテゴリセクションは削除 - Project型からcategoryプロパティが削除されたため */}
 
           {/* リンク */}
           <div className='flex flex-wrap gap-3 pt-2'>
