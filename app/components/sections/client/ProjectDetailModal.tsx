@@ -59,17 +59,11 @@ export default function ProjectDetailModal({ project, open, onOpenChange }: Proj
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             <div>
               <h3 className='text-sm font-medium text-muted-foreground'>期間</h3>
-              <p>{
-                // @ts-ignore - Project型にperiodプロパティが存在しないというエラーを回避
-                project.period || '非公開'}
-              </p>
+              <p>{project.period || '非公開'}</p>
             </div>
             <div>
               <h3 className='text-sm font-medium text-muted-foreground'>役割</h3>
-              <p>{
-                // @ts-ignore - Project型にroleプロパティが存在しないというエラーを回避
-                project.role || '非公開'}
-              </p>
+              <p>{project.role || '非公開'}</p>
             </div>
           </div>
 
