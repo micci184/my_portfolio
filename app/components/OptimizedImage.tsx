@@ -11,6 +11,11 @@ interface OptimizedImageProps extends Omit<ImageProps, 'onLoadingComplete'> {
   lowQualityPlaceholder?: boolean;
   className?: string;
   containerClassName?: string;
+  /**
+   * 画像の詳細な説明（スクリーンリーダー用）
+   * alt属性が短い場合に補足情報として使用
+   */
+  longDescription?: string;
 }
 
 /**
@@ -28,6 +33,7 @@ export default function OptimizedImage({
   priority = false,
   className,
   containerClassName,
+  longDescription,
   ...props
 }: OptimizedImageProps) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -35,8 +41,15 @@ export default function OptimizedImage({
   const { width, height } = getOptimizedImageSize(defaultWidth, defaultHeight);
   const shouldPrioritize = getImagePriority(priority);
   
+  // 画像のユニークID生成（安全な文字列に変換）
+  const safeAltText = alt?.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-_]/g, '') || 'image';
+  const imageId = `image-${safeAltText}-${Math.floor(Math.random() * 1000)}`;
+  const containerId = `container-${imageId}`;
+  const descriptionId = longDescription ? `desc-${imageId}` : undefined;
+  
   // モバイルでのパフォーマンス最適化のため、画面内に入ったときのみ画像を読み込む
   const [inView, setInView] = useState(shouldPrioritize);
+  const [loadingStatus, setLoadingStatus] = useState<'loading' | 'loaded' | 'error'>('loading');
   
   useEffect(() => {
     // priorityがtrueの場合は常に表示
@@ -56,7 +69,7 @@ export default function OptimizedImage({
       { threshold: 0.1 } // 10%表示されたら読み込み開始
     );
     
-    const element = document.getElementById(`image-container-${alt?.replace(/\s+/g, '-')}`);
+    const element = document.getElementById(containerId);
     if (element) {
       observer.observe(element);
     }
@@ -64,34 +77,62 @@ export default function OptimizedImage({
     return () => {
       observer.disconnect();
     };
-  }, [alt, shouldPrioritize]);
+  }, [containerId, shouldPrioritize]);
+
+  const handleImageLoad = () => {
+    setIsLoaded(true);
+    setLoadingStatus('loaded');
+  };
+
+  const handleImageError = () => {
+    setLoadingStatus('error');
+  };
 
   return (
-    <div 
-      id={`image-container-${alt?.replace(/\s+/g, '-')}`}
+    <figure 
+      id={containerId}
       className={cn(
         'relative overflow-hidden',
         containerClassName
       )}
       style={{ width: '100%', height: 'auto', aspectRatio: `${width}/${height}` }}
     >
+      {longDescription && (
+        <div id={descriptionId} className="sr-only">
+          {longDescription}
+        </div>
+      )}
+      
       {inView ? (
-        <Image
-          src={src}
-          alt={alt}
-          width={width}
-          height={height}
-          className={cn(
-            'transition-opacity duration-500',
-            isLoaded ? 'opacity-100' : 'opacity-0',
-            className
-          )}
-          sizes={getImageSizes()}
-          priority={shouldPrioritize}
-          loading={shouldPrioritize ? 'eager' : 'lazy'}
-          onLoad={() => setIsLoaded(true)}
-          {...props}
-        />
+        <>
+          <Image
+            id={imageId}
+            src={src}
+            alt={alt || ''} // 空の文字列をデフォルトとして設定
+            width={width}
+            height={height}
+            className={cn(
+              'transition-opacity duration-500',
+              isLoaded ? 'opacity-100' : 'opacity-0',
+              className
+            )}
+            sizes={getImageSizes()}
+            priority={shouldPrioritize}
+            loading={shouldPrioritize ? 'eager' : 'lazy'}
+            onLoad={handleImageLoad}
+            onError={handleImageError}
+            aria-describedby={descriptionId}
+            {...props}
+          />
+          {/* 読み込み状態をスクリーンリーダーに通知 */}
+          <div 
+            aria-live="polite" 
+            className="sr-only"
+          >
+            {loadingStatus === 'loading' && '画像を読み込み中です'}
+            {loadingStatus === 'error' && '画像の読み込みに失敗しました'}
+          </div>
+        </>
       ) : (
         // プレースホルダー
         <div 
@@ -100,8 +141,11 @@ export default function OptimizedImage({
             className
           )}
           aria-hidden="true"
-        />
+          role="presentation"
+        >
+          <span className="sr-only">画像読み込み準備中</span>
+        </div>
       )}
-    </div>
+    </figure>
   );
 }

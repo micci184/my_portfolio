@@ -7,6 +7,8 @@ export interface Project {
   live: string;
   image: string;
   featured: boolean;
+  period?: string; // プロジェクト期間
+  role?: string;  // プロジェクトでの役割
 }
 
 export const projects: Project[] = [
@@ -31,6 +33,8 @@ export const projects: Project[] = [
     live: "https://case-study.micci184.dev/financial-cloud",
     image: "/images/projects/financial-cloud.webp",
     featured: true,
+    period: "2023年4月 - 2024年3月",
+    role: "インフラアーキテクト",
   },
   {
     id: 2,
@@ -53,6 +57,8 @@ export const projects: Project[] = [
     live: "https://fintech-demo.micci184.dev",
     image: "/images/projects/fintech-app.webp",
     featured: true,
+    period: "2022年10月 - 2023年6月",
+    role: "DevOpsエンジニア",
   },
   {
     id: 3,
@@ -72,6 +78,8 @@ export const projects: Project[] = [
     live: "https://ecommerce-demo.micci184.dev",
     image: "/images/projects/ecommerce-frontend.webp",
     featured: true,
+    period: "2022年5月 - 2022年9月",
+    role: "フロントエンドエンジニア",
   },
   {
     id: 4,
@@ -91,6 +99,8 @@ export const projects: Project[] = [
     live: "https://monitoring-demo.micci184.dev",
     image: "/images/projects/monitoring-dashboard.webp",
     featured: false,
+    period: "2022年1月 - 2022年4月",
+    role: "SREエンジニア",
   },
   {
     id: 5,
@@ -109,5 +119,7 @@ export const projects: Project[] = [
     live: "https://terraform-modules.micci184.dev",
     image: "/images/projects/terraform-modules.webp",
     featured: false,
+    period: "2021年8月 - 2021年12月",
+    role: "クラウドエンジニア",
   },
 ];
