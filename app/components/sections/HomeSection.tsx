@@ -67,7 +67,11 @@ export default function HomeSection() {
           </div>
         </div>
 
-        <SectionNavigationButtons />
+        <SectionNavigationButtons
+          onSectionChange={(_section: SectionId) => {
+            /* TODO: セクション切替ロジックを実装 */
+          }}
+        />
 
         <TerminalOutput />
       </div>
