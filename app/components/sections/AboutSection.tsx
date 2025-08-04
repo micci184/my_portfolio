@@ -1,60 +1,7 @@
 import { Cloud, Server, Shield, Cpu } from "lucide-react";
-
-interface SkillGroup {
-  category: string;
-  skills: string[];
-}
+import { skillCategories } from "@/app/data/skills";
 
 export default function AboutSection() {
-  const cloudSkills: SkillGroup[] = [
-    {
-      category: "AWS Services",
-      skills: [
-        "EC2",
-        "ECS",
-        "Lambda",
-        "S3",
-        "RDS",
-        "CloudFormation",
-        "CloudWatch",
-        "API Gateway",
-      ],
-    },
-    {
-      category: "Google Cloud",
-      skills: [
-        "Compute Engine",
-        "Cloud Run",
-        "BigQuery",
-        "Cloud Storage",
-        "Pub/Sub",
-        "Cloud Functions",
-      ],
-    },
-    {
-      category: "DevOps & Infrastructure",
-      skills: [
-        "Docker",
-        "Kubernetes",
-        "Terraform",
-        "Ansible",
-        "Jenkins",
-        "GitHub Actions",
-      ],
-    },
-    {
-      category: "Monitoring & Security",
-      skills: [
-        "Prometheus",
-        "Grafana",
-        "ELK Stack",
-        "AWS IAM",
-        "Cloud Security",
-        "Network Security",
-      ],
-    },
-  ];
-
   return (
     <div className="flex h-full w-full items-center justify-center p-4 sm:p-6 md:p-8">
       <div className="mx-auto grid w-full max-w-6xl items-center gap-8 lg:grid-cols-2 lg:gap-12">
@@ -93,7 +40,7 @@ export default function AboutSection() {
               Technical Skills
             </h3>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
-              {cloudSkills.map((skillGroup) => (
+              {skillCategories.slice(0, 4).map((skillGroup) => (
                 <div
                   key={skillGroup.category}
                   className="glass rounded-lg p-3 sm:p-4"
