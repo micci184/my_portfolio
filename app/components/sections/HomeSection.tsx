@@ -38,6 +38,9 @@ function TerminalOutputSkeleton() {
   );
 }
 
+// クライアントコンポーネントを使用するため、"use client"ディレクティブを追加
+"use client";
+
 export default function HomeSection() {
   return (
     <div className="flex h-full w-full items-center justify-center p-4">
