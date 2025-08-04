@@ -1,227 +1,108 @@
 "use client";
 
-import * as React from "react";
-import {
-  Github,
-  Twitter,
-  Linkedin,
-  Instagram,
-  Home,
-  User,
-  Briefcase,
-  FolderGit2,
-  Send,
-  PanelLeftClose,
-  PanelRightClose,
-} from "lucide-react";
+import { useState, useEffect } from "react";
+import { Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { SectionId } from "./Portfolio";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../../../components/ui/tooltip";
-import { cn } from "../../../lib/utils";
-import { Button } from "../../../components/ui/button";
+import { cn } from "@/lib/utils";
 
-interface NavItemData {
-  id: SectionId;
-  label: string;
-  icon: React.ElementType;
+export interface SidebarProps {
+  isOpen: boolean;
+  onToggle: () => void;
 }
 
-interface SocialItem {
-  name: string;
-  icon: React.ElementType;
-  href: string;
-}
+export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
+  const [activeSection, setActiveSection] = useState<SectionId>(SectionId.Home);
+  const [isMounted, setIsMounted] = useState(false);
 
-interface SidebarProps {
-  activeSection: SectionId;
-  setActiveSection: (section: SectionId) => void;
-  isCollapsed: boolean;
-  setIsCollapsed: (isCollapsed: boolean) => void;
-  isMobile: boolean;
-}
+  // クライアントサイドでのみマウント状態を更新
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
-interface NavItemProps {
-  item: NavItemData;
-  activeSection: SectionId;
-  isCollapsed: boolean;
-  onClick: () => void;
-}
+  const handleSectionClick = (section: SectionId) => {
+    setActiveSection(section);
+    const element = document.getElementById(section);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+    onToggle(); // サイドバーを閉じる
+  };
 
-export default function Sidebar({
-  activeSection,
-  setActiveSection,
-  isCollapsed,
-  setIsCollapsed,
-  isMobile,
-}: SidebarProps) {
-  const navItems: NavItemData[] = [
-    { id: "home", label: "ホーム", icon: Home },
-    { id: "about", label: "自己紹介", icon: User },
-    { id: "experience", label: "経歴", icon: Briefcase },
-    { id: "projects", label: "プロジェクト", icon: FolderGit2 },
-    { id: "contact", label: "お問い合わせ", icon: Send },
-  ];
+  // サーバーサイドレンダリング時は何も表示しない
+  if (!isMounted) return null;
 
-  const socialItems: SocialItem[] = [
-    { name: "GitHub", icon: Github, href: "https://github.com/micci184" },
-    { name: "Twitter", icon: Twitter, href: "https://twitter.com/micci184" },
-    {
-      name: "LinkedIn",
-      icon: Linkedin,
-      href: "https://linkedin.com/in/micci184",
-    },
-    {
-      name: "Instagram",
-      icon: Instagram,
-      href: "https://instagram.com/micci184",
-    },
+  const sections = [
+    { id: SectionId.Home, label: "Home" },
+    { id: SectionId.About, label: "About" },
+    { id: SectionId.Experience, label: "Experience" },
+    { id: SectionId.Projects, label: "Projects" },
+    { id: SectionId.Contact, label: "Contact" },
   ];
 
   return (
-    <aside
-      className={cn(
-        "relative flex h-screen flex-col border-r bg-card transition-all duration-300 ease-in-out",
-        isCollapsed ? "w-20" : "w-64"
-      )}
-      aria-label="サイドバーナビゲーション"
-      role="navigation"
-    >
-      <div className="flex flex-1 flex-col gap-y-4 overflow-y-auto p-4">
-        <nav className="flex flex-col gap-y-2" aria-label="メインナビゲーション">
-          <ul className="list-none p-0 m-0 flex flex-col gap-y-2">
-            {navItems.map((item) => (
-              <li key={item.id}>
-                <NavItem
-                  item={item}
-                  activeSection={activeSection}
-                  isCollapsed={isCollapsed}
-                  onClick={() => setActiveSection(item.id)}
-                />
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
-
-      <div className="mt-auto flex flex-col items-center gap-y-4 p-4">
-        <div
-          className={cn(
-            "flex items-center justify-center",
-            isCollapsed ? "flex-col gap-y-4" : "gap-x-4"
-          )}
-        >
-          <ul className={cn(
-            "list-none p-0 m-0 flex items-center", 
-            isCollapsed ? "flex-col gap-y-4" : "gap-x-4"
-          )} aria-label="ソーシャルリンク">
-            {socialItems.map((item) => (
-              <li key={item.name}>
-                <SocialItem item={item} isCollapsed={isCollapsed} />
-              </li>
-            ))}
-          </ul>
-        </div>
-        {!isMobile && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-10 w-10 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            aria-pressed={isCollapsed}
-            aria-label={isCollapsed ? "サイドバーを展開" : "サイドバーを折りたたむ"}
-          >
-            {isCollapsed ? <PanelRightClose aria-hidden="true" /> : <PanelLeftClose aria-hidden="true" />}
-            <span className="sr-only">{isCollapsed ? "サイドバーを展開" : "サイドバーを折りたたむ"}</span>
-          </Button>
+    <>
+      {/* モバイルメニューボタン */}
+      <Button
+        variant="ghost"
+        size="icon"
+        className="fixed left-4 top-4 z-50 md:hidden"
+        onClick={onToggle}
+        aria-label={isOpen ? "Close menu" : "Open menu"}
+      >
+        {isOpen ? (
+          <X className="h-6 w-6" aria-hidden="true" />
+        ) : (
+          <Menu className="h-6 w-6" aria-hidden="true" />
         )}
+      </Button>
+
+      {/* サイドバー */}
+      <div
+        className={cn(
+          "fixed inset-y-0 left-0 z-40 w-64 transform bg-background/80 backdrop-blur-md transition-transform duration-300 ease-in-out md:translate-x-0 md:border-r md:border-border",
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        <div className="flex h-full flex-col justify-between p-4">
+          <div className="mt-16 md:mt-8">
+            <div className="mb-8 text-center">
+              <h1 className="text-xl font-bold text-primary">micci184</h1>
+              <p className="text-sm text-muted-foreground">Full Stack Engineer</p>
+            </div>
+
+            <nav className="space-y-1">
+              {sections.map(({ id, label }) => (
+                <button
+                  key={id}
+                  className={cn(
+                    "w-full rounded-md px-4 py-2 text-left text-sm transition-colors",
+                    activeSection === id
+                      ? "bg-primary/10 font-medium text-primary"
+                      : "text-foreground hover:bg-muted"
+                  )}
+                  onClick={() => handleSectionClick(id)}
+                >
+                  {label}
+                </button>
+              ))}
+            </nav>
+          </div>
+
+          <div className="text-center text-xs text-muted-foreground">
+            &copy; {new Date().getFullYear()} micci184
+          </div>
+        </div>
       </div>
-    </aside>
-  );
-}
 
-function NavItem({ item, activeSection, onClick, isCollapsed }: NavItemProps) {
-  const isActive = activeSection === item.id;
-  if (isCollapsed) {
-    return (
-      <TooltipProvider>
-        <Tooltip delayDuration={0}>
-          <TooltipTrigger asChild>
-            <Button
-              onClick={onClick}
-              variant={isActive ? "default" : "ghost"}
-              className="h-12 w-12 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-              aria-label={item.label}
-              aria-current={isActive ? "page" : undefined}
-              role="link"
-            >
-              <item.icon className="h-6 w-6" aria-hidden="true" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="right" className="ml-2" role="tooltip">
-            {item.label}
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    );
-  }
-
-  return (
-    <Button
-      onClick={onClick}
-      variant={isActive ? "default" : "ghost"}
-      className="h-12 w-full justify-start gap-x-4 px-4 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-      aria-current={isActive ? "page" : undefined}
-      role="link"
-    >
-      <item.icon className="h-6 w-6" aria-hidden="true" />
-      <span>{item.label}</span>
-    </Button>
-  );
-}
-
-function SocialItem({
-  item,
-  isCollapsed,
-}: {
-  item: SocialItem;
-  isCollapsed: boolean;
-}) {
-  if (isCollapsed) {
-    return (
-      <TooltipProvider>
-        <Tooltip delayDuration={0}>
-          <TooltipTrigger asChild>
-            <a
-              href={item.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md p-1"
-              aria-label={`${item.name}（新しいウィンドウで開く）`}
-            >
-              <item.icon className="h-5 w-5" aria-hidden="true" />
-              <span className="sr-only">{item.name}</span>
-            </a>
-          </TooltipTrigger>
-          <TooltipContent side="right" role="tooltip">{item.name}</TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    );
-  }
-
-  return (
-    <a
-      href={item.href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md p-1"
-      aria-label={`${item.name}（新しいウィンドウで開く）`}
-    >
-      <item.icon className="h-5 w-5" aria-hidden="true" />
-      <span className="sr-only">{item.name}</span>
-    </a>
+      {/* オーバーレイ（モバイルのみ） */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-background/80 backdrop-blur-sm md:hidden"
+          onClick={onToggle}
+          aria-hidden="true"
+        />
+      )}
+    </>
   );
 }
