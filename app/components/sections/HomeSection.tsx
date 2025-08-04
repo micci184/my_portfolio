@@ -1,3 +1,5 @@
+"use client";
+
 import dynamic from "next/dynamic";
 import { SectionId } from "../layout/Portfolio";
 
@@ -37,9 +39,6 @@ function TerminalOutputSkeleton() {
     </div>
   );
 }
-
-// クライアントコンポーネントを使用するため、"use client"ディレクティブを追加
-"use client";
 
 export default function HomeSection() {
   return (
