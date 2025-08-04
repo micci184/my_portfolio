@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import Image, { ImageProps } from 'next/image';
 import { useImageOptimization } from './hooks/useImageOptimization';
 import { cn } from '@/lib/utils';
@@ -24,7 +24,7 @@ interface OptimizedImageProps extends Omit<ImageProps, 'onLoadingComplete'> {
  * - 遅延読み込み
  * - プレースホルダー表示
  */
-export default function OptimizedImage({
+function OptimizedImage({
   src,
   alt,
   defaultWidth,
@@ -37,7 +37,7 @@ export default function OptimizedImage({
   ...props
 }: OptimizedImageProps) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const { getOptimizedImageSize, getImageSizes, getImagePriority, isMobile } = useImageOptimization();
+  const { getOptimizedImageSize, getImageSizes, getImagePriority } = useImageOptimization();
   const { width, height } = getOptimizedImageSize(defaultWidth, defaultHeight);
   const shouldPrioritize = getImagePriority(priority);
   
@@ -66,7 +66,10 @@ export default function OptimizedImage({
           observer.disconnect();
         }
       },
-      { threshold: 0.1 } // 10%表示されたら読み込み開始
+      { 
+        threshold: 0.1,  // 10%表示されたら読み込み開始
+        rootMargin: '200px' // 画面外200pxの位置から先読み開始
+      }
     );
     
     const element = document.getElementById(containerId);
@@ -149,3 +152,6 @@ export default function OptimizedImage({
     </figure>
   );
 }
+
+// メモ化してコンポーネントの不要な再レンダリングを防止
+export default memo(OptimizedImage);
