@@ -1,8 +1,9 @@
+import type { LucideIcon } from "lucide-react";
 import { Github, Twitter, Linkedin, Instagram } from "lucide-react";
 
 export interface SocialItem {
   name: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
   href: string;
   color: string;
 }
