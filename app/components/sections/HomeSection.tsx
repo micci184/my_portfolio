@@ -1,3 +1,5 @@
+"use client";
+
 import dynamic from "next/dynamic";
 import { SectionId } from "../layout/Portfolio";
 
@@ -38,13 +40,7 @@ function TerminalOutputSkeleton() {
   );
 }
 
-export function HomeSection() {
-  // セクション変更のハンドラ関数（プロパティとして渡す）
-  const handleSectionChange = (section: SectionId) => {
-    // サーバーコンポーネントでは何もしない
-    // 実際の処理はクライアントコンポーネントで行う
-  };
-
+export default function HomeSection() {
   return (
     <div className="flex h-full w-full items-center justify-center p-4">
       <div className="mx-auto w-full max-w-4xl space-y-6 text-center md:space-y-8">
@@ -73,13 +69,14 @@ export function HomeSection() {
           </div>
         </div>
 
-        <SectionNavigationButtons onSectionChange={handleSectionChange} />
+        <SectionNavigationButtons
+          onSectionChange={(_section: SectionId) => {
+            /* TODO: セクション切替ロジックを実装 */
+          }}
+        />
 
         <TerminalOutput />
       </div>
     </div>
   );
 }
-
-// デフォルトエクスポートから名前付きエクスポートに変更
-export default HomeSection;

@@ -4,16 +4,20 @@ import { useState, useRef, KeyboardEvent } from 'react';
 import { Github } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import { Project, projects } from '@/app/data/projects';
+import { Project } from '@/app/data/projects';
 import ProjectLinks from './ProjectLinks';
 import ProjectDetailModal from './ProjectDetailModal';
 import ProjectFilters from './ProjectFilters';
 import { cn } from '@/lib/utils';
 
-export default function ProjectsClient() {
+interface ProjectsClientProps {
+  initialProjects: Project[];
+}
+
+export default function ProjectsClient({ initialProjects }: ProjectsClientProps) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [filteredProjects, setFilteredProjects] = useState<Project[]>(projects);
+  const [filteredProjects, setFilteredProjects] = useState<Project[]>(initialProjects);
   const [focusedProjectIndex, setFocusedProjectIndex] = useState<number>(-1);
   const projectRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -80,7 +84,7 @@ export default function ProjectsClient() {
   return (
     <>
       {/* フィルター */}
-      <ProjectFilters projects={projects} onFilterChange={handleFilterChange} />
+      <ProjectFilters projects={initialProjects} onFilterChange={handleFilterChange} />
 
       {/* プロジェクト一覧 */}
       <section 
@@ -111,18 +115,11 @@ export default function ProjectsClient() {
                 <div className="relative overflow-hidden">
                   <Image
                     src={project.image}
-                    alt={`${project.title}のプロジェクト画像`}
+                    alt={project.title}
                     width={600}
-                    height={400}
-                    className="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-110 group-focus:scale-110 sm:h-56"
-                    priority={project.featured}
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
+                    height={300}
+                    className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
-
-                  {/* Link Icons */}
-                  <ProjectLinks github={project.github} live={project.live} />
-
-                  {/* Text Overlay */}
                   <div 
                     className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/60 to-transparent p-4 sm:p-6"
                     aria-hidden="false"
@@ -188,7 +185,7 @@ export default function ProjectsClient() {
               <p className="text-muted-foreground">条件に一致するプロジェクトがありません</p>
               <Button 
                 variant="link" 
-                onClick={() => setFilteredProjects(projects)}
+                onClick={() => setFilteredProjects(initialProjects)}
                 className="mt-2 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               >
                 すべて表示

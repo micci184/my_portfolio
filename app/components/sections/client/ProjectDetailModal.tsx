@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
@@ -15,7 +15,7 @@ interface ProjectDetailModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export default function ProjectDetailModal({ project, open, onOpenChange }: ProjectDetailModalProps) {
+function ProjectDetailModal({ project, open, onOpenChange }: ProjectDetailModalProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   if (!project) return null;
@@ -43,6 +43,7 @@ export default function ProjectDetailModal({ project, open, onOpenChange }: Proj
                       fill
                       className='object-cover rounded-lg'
                       sizes='(max-width: 768px) 100vw, 800px'
+                      loading="eager" // モーダル内の画像は優先的に読み込む
                     />
                   </div>
                 </CarouselItem>
@@ -73,8 +74,6 @@ export default function ProjectDetailModal({ project, open, onOpenChange }: Proj
             <p className='mt-1'>{project.description}</p>
           </div>
 
-          {/* 成果セクションは削除 - Project型からachievementsプロパティが削除されたため */}
-
           {/* 使用技術 */}
           <div>
             <h3 className='text-sm font-medium text-muted-foreground'>使用技術</h3>
@@ -84,8 +83,6 @@ export default function ProjectDetailModal({ project, open, onOpenChange }: Proj
               ))}
             </div>
           </div>
-
-          {/* カテゴリセクションは削除 - Project型からcategoryプロパティが削除されたため */}
 
           {/* リンク */}
           <div className='flex flex-wrap gap-3 pt-2'>
@@ -111,3 +108,6 @@ export default function ProjectDetailModal({ project, open, onOpenChange }: Proj
     </Dialog>
   );
 }
+
+// メモ化してコンポーネントの不要な再レンダリングを防止
+export default memo(ProjectDetailModal);
